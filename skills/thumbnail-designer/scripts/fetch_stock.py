@@ -99,6 +99,16 @@ def main():
     ap.add_argument("--timeout", type=int, default=45)
     a = ap.parse_args()
 
+    people = ("face", "man", "woman", "person", "people", "portrait", "model", "guy",
+              "girl", "boy", "businessman", "businesswoman", "entrepreneur", "selfie")
+    if any(w in a.query.lower().split() or w in a.query.lower() for w in people):
+        print()
+        print("!! This query is about PEOPLE. An open licence is NOT a model release.")
+        print("   Do not put a stranger's face on a commercial offer (gig, ad, product,")
+        print("   course) - it implies they endorse it. Use the user's own photo.")
+        print("   See references/identity-protocol.md.")
+        print()
+
     orientation = "wide" if a.landscape else ("tall" if a.portrait else None)
     lic = None if a.any_license else SAFE
 

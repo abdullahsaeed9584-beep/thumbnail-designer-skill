@@ -28,3 +28,26 @@ Restrained, realistic tonal correction only; keep texture; no identity change.
 
 ## Multiple people
 Same protocol per person. Don't combine people/scenes to imply an event that didn't happen.
+
+## Third-party and stock faces (not the user's own photo)
+
+A licence is not a model release. CC0, public-domain and Unsplash-style terms grant
+**copyright** permission; they almost never grant the right to use an identifiable person's
+likeness to advertise something.
+
+**Never put a stranger's face on a commercial offer** - a gig image, a service ad, a product
+page, a course sales thumbnail. It implies that person provides or endorses the thing, and a
+buyer reasonably assumes that is who they are hiring. That is a false depiction under this
+skill's honesty rules, whatever the image licence says.
+
+Order of preference whenever a face is wanted:
+1. **The user's own photo.** Free, legally clean, and it converts better - people hire people.
+2. A person who has given the user explicit permission, or a properly model-released library
+   the user pays for and names.
+3. No face. A strong object, device, type-hero or illustration beats a borrowed face.
+
+Also never acceptable: a real public figure implying endorsement, an AI-generated face passed
+off as the seller or a customer, or a face swapped onto another body.
+
+If the user asks for a stock face anyway, say once why it is a problem, offer the three options
+above, and build the layout so their own photo drops straight in.
