@@ -1,0 +1,13 @@
+{
+  "name": "thumbnail-designer-marketplace",
+  "owner": {
+    "name": "abdullahsaeed9584-beep"
+  },
+  "plugins": [
+    {
+      "name": "thumbnail-designer",
+      "source": "./",
+      "description": "Senior art director for premium thumbnails - designs, renders, critiques, A/B tests and resizes covers for YouTube, Shorts, Reels, TikTok, Instagram, Facebook, LinkedIn, podcast and OG, with strict face/hair identity preservation and Urdu/RTL support."
+    }
+  ]
+}

@@ -24,7 +24,7 @@ First release.
 - Case routes R (vertical covers) and S (channel style systems).
 - `yt_hd`, `shorts`, `ig_square`, `x_post` resize presets and a `--presets all` shortcut.
 - Expanded evals: 25 prompts covering premium craft, traps and degraded environments.
-- Packaged as an installable Claude Code plugin.
+- Packaged as an installable Claude Code plugin, with a marketplace manifest.
 
 ### Changed
 - `SKILL.md` workflow now mandates the proof tests and the scorecard before delivery.
@@ -41,3 +41,5 @@ First release.
 - Unsupplied colour tokens now fall back to sane defaults - an empty CSS custom property is
   valid but silently breaks every `color-mix()` and gradient that reads it.
 - `vertical-cover.html` keeps the headline clear of the subject's face.
+- `product-led.html`'s callout ring is opt-in (`--var RING=1`) instead of landing on the
+  subject by default, where it read as an accidental halo.

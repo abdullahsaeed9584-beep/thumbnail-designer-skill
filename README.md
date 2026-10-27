@@ -22,20 +22,21 @@ background replacement, cinematic grading, and CTR-focused critique.
 
 ## Install
 
-**As a Claude Code plugin (recommended)**
+**As a plain skill** — copy the skill folder into your skills directory:
+
+```bash
+git clone https://github.com/abdullahsaeed9584-beep/thumbnail-designer-skill
+# user-level (all projects)
+cp -r thumbnail-designer-skill/skills/thumbnail-designer ~/.claude/skills/
+# or project-level, inside a repo
+cp -r thumbnail-designer-skill/skills/thumbnail-designer .claude/skills/
+```
+
+**As a Claude Code plugin** — this repo ships a marketplace manifest:
 
 ```bash
 /plugin marketplace add abdullahsaeed9584-beep/thumbnail-designer-skill
 /plugin install thumbnail-designer
-```
-
-**As a plain skill** — copy the skill folder into your skills directory:
-
-```bash
-# user-level (all projects)
-cp -r skills/thumbnail-designer ~/.claude/skills/
-# or project-level
-cp -r skills/thumbnail-designer .claude/skills/
 ```
 
 **On Claude.ai** — upload `skills/thumbnail-designer/` as a custom skill.
