@@ -1,0 +1,64 @@
+<!doctype html>
+<!-- Comparison / before-after 16:9. Two balanced halves, hard diagonal split,
+     warm vs cool grade, one word per side. Only for a REAL comparison -
+     a fabricated before/after is a honesty violation (see SKILL.md hard rules).
+     render_html.py comparison.html out.png \
+       --var LEFT_IMG="work/before.jpg" --var RIGHT_IMG="work/after.jpg" \
+       --var LEFT_LABEL="BEFORE" --var RIGHT_LABEL="AFTER" --var KEYWORD="VS" \
+       --var SUBHEAD="30 days, no edits" --var ACCENT="#00E5FF" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Comparison thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --accent: {{ACCENT}}; --vignette: 0.5; }
+  .half { position: absolute; top: 0; height: 100%; width: 54%; background-size: cover; background-position: center; }
+  .half.left  { left: 0;  clip-path: polygon(0 0, 100% 0, calc(100% - 92px) 100%, 0 100%); filter: saturate(0.62) brightness(0.74) sepia(0.12); }
+  .half.right { right: 0; clip-path: polygon(92px 0, 100% 0, 100% 100%, 0 100%); filter: saturate(1.12) brightness(1.04); }
+  .seam {
+    position: absolute; top: -8%; left: 50%; width: 10px; height: 116%; z-index: 4;
+    background: var(--accent); transform: translateX(-50%) rotate(4.2deg);
+    box-shadow: 0 0 34px color-mix(in srgb, var(--accent) 80%, transparent);
+  }
+  .pill {
+    position: absolute; z-index: 6; bottom: 56px;
+    font-family: var(--support-font); font-weight: 900; font-size: 34px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: #fff;
+    background: rgba(0,0,0,0.62); padding: 12px 26px; border-radius: 8px;
+    backdrop-filter: blur(6px);
+  }
+  .pill.l { left: 64px; }
+  .pill.r { right: 64px; background: var(--accent); color: #0B0E14; }
+  .vs {
+    position: absolute; z-index: 7; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font-family: var(--display); font-size: 108px; line-height: 1;
+    color: #fff; -webkit-text-fill-color: #fff;
+    text-shadow: 0 0 34px rgba(0,0,0,0.95), 0 6px 0 rgba(0,0,0,0.5);
+  }
+  .subhead { position: absolute; z-index: 7; left: 50%; top: 42px; transform: translateX(-50%); font-size: 28px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg-fallback"></div>
+  <div class="half left"  style="background-image:url('{{LEFT_IMG}}')"></div>
+  <div class="half right" style="background-image:url('{{RIGHT_IMG}}')"></div>
+  <div class="seam"></div>
+
+  <div class="subhead">{{SUBHEAD}}</div>
+  <div class="vs">{{KEYWORD}}</div>
+  <div class="pill l">{{LEFT_LABEL}}</div>
+  <div class="pill r">{{RIGHT_LABEL}}</div>
+
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  document.querySelectorAll('.subhead,.vs,.pill').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+</script>
+</body>
+</html>

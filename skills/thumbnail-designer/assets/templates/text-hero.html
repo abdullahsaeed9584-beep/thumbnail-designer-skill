@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- Text-hero 16:9. No subject photo available, or the words ARE the idea.
+     Huge 2-3 word statement, one accent keyword, one supporting cue.
+     render_html.py text-hero.html out.png \
+       --var HEADLINE="BIG" --var KEYWORD="MISTAKE" --var SUBHEAD="most beginners make it" \
+       --var BG="work/bg.jpg" --var ACCENT="#FFD76E" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Text-hero thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --accent: {{ACCENT}}; --vignette: 0.62; }
+  .stage { text-align: center; }
+  .wrap {
+    position: absolute; inset: 0; z-index: 5;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 22px; padding: 0 92px;
+  }
+  .headline { position: static; font-size: 176px; max-width: 1080px; }
+  .subhead  { font-size: 30px; }
+  .rule {
+    width: 180px; height: 8px; border-radius: 4px; background: var(--accent);
+    box-shadow: 0 0 26px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  .keylight { right: 50%; transform: translateX(50%); top: -300px; width: 1000px; height: 1000px; }
+  .fg-bokeh.a { left: -60px; top: 40%; width: 240px; height: 240px; opacity: .5; }
+  .fg-bokeh.b { right: -40px; bottom: 10%; width: 200px; height: 200px; opacity: .45; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg-fallback"></div>
+  <div class="bg" style="background-image:url('{{BG}}')"></div>
+  <div class="keylight"></div>
+
+  <div class="wrap">
+    <div class="subhead">{{SUBHEAD}}</div>
+    <h1 class="headline">{{HEADLINE}} <span class="keyword">{{KEYWORD}}</span></h1>
+    <div class="rule"></div>
+  </div>
+
+  <div class="fg-bokeh a"></div>
+  <div class="fg-bokeh b"></div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  document.querySelectorAll('.subhead,.headline .keyword').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+  var h = document.querySelector('.headline');
+  var size = parseFloat(getComputedStyle(h).fontSize);
+  while (size > 70 && (h.scrollHeight > 430 || h.scrollWidth > 1096)) {
+    size -= 6; h.style.fontSize = size + 'px';
+  }
+</script>
+</body>
+</html>

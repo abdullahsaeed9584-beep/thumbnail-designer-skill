@@ -1,0 +1,10 @@
+{
+  "name": "thumbnail-designer",
+  "version": "1.0.0",
+  "description": "Senior art director for premium thumbnails and cover images - designs, renders, critiques, A/B tests and resizes for YouTube, Shorts, Reels, TikTok, Instagram, Facebook, LinkedIn, podcast and OG, with strict face/hair identity preservation and Urdu/RTL support.",
+  "license": "MIT",
+  "keywords": [
+    "thumbnail", "youtube", "shorts", "reels", "tiktok", "cover-image",
+    "design", "art-direction", "ctr", "typography", "compositing", "urdu"
+  ]
+}

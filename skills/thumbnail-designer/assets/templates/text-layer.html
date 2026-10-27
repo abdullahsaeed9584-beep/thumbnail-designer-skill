@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- Headline only, transparent background - for the Python compositing route.
+     Render it, then composite it UNDER the subject so the subject masks it:
+       render_html.py text-layer.html work/text.png --transparent \
+         --var HEADLINE="IT'S" --var KEYWORD="OVER" --var ACCENT="#00E5FF" --var ALIGN=left
+       composite.py bg.jpg cut.png out.png --text-layer work/text.png --rim "#00E5FF"
+     ALIGN: left | center | right  (set via --var ALIGN=...) -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Text layer</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --accent: {{ACCENT}}; }
+  html, body, .stage { background: transparent; }
+  .wrap {
+    position: absolute; inset: 0; padding: 86px 60px;
+    display: flex; flex-direction: column; justify-content: flex-start;
+  }
+  .wrap[data-align="center"] { align-items: center; text-align: center; justify-content: center; }
+  .wrap[data-align="right"]  { align-items: flex-end; text-align: right; }
+  .wrap[data-align="left"]   { align-items: flex-start; text-align: left; }
+  .headline { position: static; font-size: 136px; max-width: 660px; }
+  .subhead { font-size: 26px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="wrap" data-align="{{ALIGN}}">
+    <div class="subhead">{{SUBHEAD}}</div>
+    <h1 class="headline">{{HEADLINE}} <span class="keyword">{{KEYWORD}}</span></h1>
+  </div>
+</div>
+<script>
+  var w = document.querySelector('.wrap');
+  if (!w.dataset.align) w.dataset.align = 'left';
+  document.querySelectorAll('.subhead,.headline .keyword').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+  var h = document.querySelector('.headline');
+  var size = parseFloat(getComputedStyle(h).fontSize);
+  while (size > 54 && (h.scrollHeight > 330 || h.scrollWidth > 676)) {
+    size -= 4; h.style.fontSize = size + 'px';
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+# working files from a build
+work/
+out/
+outputs/
+*_preview168*.png
+*_safezone.png
+*_01_mobile.png
+*_02_gray.png
+*_03_squint.png
+*_04_feed.png
+*_sheet.png
+*.filled.html
+
+# fonts are fetched, not vendored
+skills/thumbnail-designer/assets/fonts/*.ttf
+skills/thumbnail-designer/assets/fonts/*.otf
+skills/thumbnail-designer/assets/fonts/*.woff2
+
+# client kits may hold private brand data - commit deliberately
+skills/thumbnail-designer/assets/brand-kits/*.md
+!skills/thumbnail-designer/assets/brand-kits/_template.md
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# os
+.DS_Store
+Thumbs.db
+desktop.ini

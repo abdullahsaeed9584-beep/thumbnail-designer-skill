@@ -1,0 +1,59 @@
+<!doctype html>
+<!-- Vertical cover 1080x1920 (Shorts / Reels / TikTok).
+     Everything that matters lives in the centre 1080x1350 - the grid crops,
+     the UI eats the bottom 20% and the right rail. 2-3 words maximum.
+     render_html.py vertical-cover.html out.png --size 1080x1920 \
+       --var HEADLINE="DON'T" --var KEYWORD="SCROLL" --var SUBJECT="work/cut.png" \
+       --var BG="work/bg.jpg" --var ACCENT="#00E5FF" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vertical cover</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --accent: {{ACCENT}}; --vignette: 0.58; }
+  html, body, .stage { width: 1080px; height: 1920px; }
+  .keylight { width: 900px; height: 900px; right: -180px; top: 120px; }
+  .subject { height: 58%; bottom: 17%; left: 50%; transform: translateX(-50%); right: auto; }
+  .headline {
+    left: 70px; right: 70px; top: 196px; width: auto;
+    font-size: 150px; text-align: center;
+  }
+  .subhead {
+    position: absolute; left: 0; right: 0; top: 132px; z-index: 5;
+    font-size: 38px; text-align: center;
+  }
+  .badge { left: 50%; transform: translateX(-50%); bottom: 24%; }
+  /* UI keep-out: top 10%, bottom 20%, right 15% */
+  .guides::before { inset: 10% 15% 20% 4%; }
+  .guides::after { display: none; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg-fallback"></div>
+  <div class="bg" style="background-image:url('{{BG}}')"></div>
+  <div class="keylight"></div>
+
+  <div class="subhead">{{SUBHEAD}}</div>
+  <h1 class="headline">{{HEADLINE}} <span class="keyword">{{KEYWORD}}</span></h1>
+
+  <img class="subject" src="{{SUBJECT}}" alt="">
+
+  <div class="badge">{{BADGE}}</div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  document.querySelectorAll('.subhead,.badge,.headline .keyword').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+  var h = document.querySelector('.headline');
+  var size = parseFloat(getComputedStyle(h).fontSize);
+  while (size > 76 && (h.scrollHeight > 400 || h.scrollWidth > 946)) {
+    size -= 6; h.style.fontSize = size + 'px';
+  }
+</script>
+</body>
+</html>

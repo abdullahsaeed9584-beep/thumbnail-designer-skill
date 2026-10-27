@@ -1,0 +1,63 @@
+<!doctype html>
+<!-- Urdu / RTL 16:9. Mirrored Z-pattern: hook on the RIGHT, subject left.
+     Nastaliq needs line-height >= 1.8 and real descender room, so the headline
+     box is taller and the word count must be 2-3.
+     render_html.py urdu-rtl.html out.png \
+       --var HEADLINE="امیر کیسے بنیں" --var SUBJECT="work/cut.png" \
+       --var BG="work/bg.jpg" --var ACCENT="#FFD76E"
+     ALWAYS open the render and check joins, ligatures, word order and dots. -->
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Urdu thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --accent: {{ACCENT}}; }
+  .headline {
+    right: 60px; top: 70px; width: 620px;
+    font-family: 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', serif;
+    font-size: 104px; font-weight: 700; line-height: 1.85; letter-spacing: 0;
+    text-transform: none; direction: rtl; text-align: right;
+    padding-bottom: 36px;            /* descender room - Nastaliq drops diagonally */
+  }
+  .subhead {
+    position: absolute; right: 64px; top: 28px; font-size: 26px; z-index: 5;
+    direction: rtl; letter-spacing: 0;
+    font-family: 'Noto Naskh Arabic', var(--support-font);
+  }
+  .keylight { left: -120px; right: auto; }
+  .badge { right: 62px; bottom: 74px; font-family: 'Noto Naskh Arabic', var(--support-font); letter-spacing: 0; }
+  .fg-bokeh.a { right: -40px; bottom: -50px; width: 220px; height: 220px; opacity: .5; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg-fallback"></div>
+  <div class="bg" style="background-image:url('{{BG}}')"></div>
+  <div class="keylight"></div>
+
+  <div class="subhead">{{SUBHEAD}}</div>
+  <h1 class="headline">{{HEADLINE}}</h1>
+
+  <img class="subject subject--left" src="{{SUBJECT}}" alt="">
+
+  <div class="badge">{{BADGE}}</div>
+  <div class="fg-bokeh a"></div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  document.querySelectorAll('.subhead,.badge').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+  var h = document.querySelector('.headline');
+  if (h) {
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    while (size > 48 && (h.scrollHeight > 390 || h.scrollWidth > 640)) {
+      size -= 4; h.style.fontSize = size + 'px';
+    }
+  }
+</script>
+</body>
+</html>

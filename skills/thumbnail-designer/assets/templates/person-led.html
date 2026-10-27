@@ -1,0 +1,58 @@
+<!doctype html>
+<!-- Person-led 16:9. Hook upper-left, subject right (Z-pattern), text masked behind
+     the subject, rim light keyed to the key-light bloom.
+     render_html.py person-led.html out.png \
+       --var HEADLINE="IT'S" --var KEYWORD="OVER" --var SUBHEAD="the truth nobody says" \
+       --var SUBJECT="work/cut.png" --var BG="work/bg.jpg" --var ACCENT="#00E5FF" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Person-led thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --accent: {{ACCENT}}; }
+  .headline  { left: 56px; top: 92px; font-size: 136px; max-width: 640px; }
+  .subhead   { position: absolute; left: 62px; top: 56px; font-size: 26px; z-index: 5; }
+  .badge     { left: 60px; bottom: 78px; }
+  .fg-bokeh.a{ left: -40px; bottom: -50px; width: 220px; height: 220px; opacity: .55; }
+  .fg-bokeh.b{ right: 120px; top: -60px; width: 160px; height: 160px; opacity: .4; }
+  .logo      { left: 58px; bottom: 34px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg-fallback"></div>
+  <div class="bg" style="background-image:url('{{BG}}')"></div>
+  <div class="keylight"></div>
+
+  <!-- 7 before 3: the subject masks the headline for real depth -->
+  <div class="subhead">{{SUBHEAD}}</div>
+  <h1 class="headline">{{HEADLINE}} <span class="keyword">{{KEYWORD}}</span></h1>
+
+  <img class="subject subject--right" src="{{SUBJECT}}" alt="">
+
+  <div class="badge">{{BADGE}}</div>
+  <div class="fg-bokeh a"></div>
+  <div class="fg-bokeh b"></div>
+  <img class="logo" src="{{LOGO}}" alt="" onerror="this.remove()">
+
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  // Drop empty placeholder nodes so unused slots leave no gap.
+  document.querySelectorAll('.subhead,.badge,.headline .keyword').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+  // Auto-fit the headline: shrink until it stays inside its column and 2 lines.
+  var h = document.querySelector('.headline');
+  if (h) {
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    while (size > 54 && (h.scrollHeight > 300 || h.scrollWidth > 660)) {
+      size -= 4; h.style.fontSize = size + 'px';
+    }
+  }
+</script>
+</body>
+</html>
