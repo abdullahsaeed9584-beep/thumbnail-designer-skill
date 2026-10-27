@@ -122,3 +122,16 @@ read as synthetic.
   matching an existing file or folder was rewritten as a path, and on Windows the match is
   case-insensitive - so a headline word like WORK beside a `work/` directory rendered as
   `file:///C:/.../work` inside the thumbnail. Conversion now requires an asset extension.
+
+## 1.4.0 - 2026-10-27
+
+### Added
+- **`assets/templates/photo-split.html`** - a real photograph full-bleed on one side, type on
+  the other, joined by a gradient scrim. No cut-out, so no mask, no halo and no hair matting.
+  This is the practical way to use real photography when `rembg` is unavailable (its model is
+  a 1 GB download) or the background is busy. `SIDE`, `SPLIT`, `FOCUS`, `GRADE`
+  (teal-orange / cool / warm / none) and an opt-in `SEAM`.
+
+### Changed
+- The accent seam is opt-in and the scrim feather is longer. A hard line at the join advertised
+  the composite as two pasted halves instead of reading as one photograph.

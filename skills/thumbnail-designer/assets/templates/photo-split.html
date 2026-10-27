@@ -1,0 +1,163 @@
+<!doctype html>
+<!-- PHOTO-SPLIT - a real photograph, full bleed on one side, type on the other.
+     Niche-agnostic and the most reliable way to use real photography, because it needs
+     NO cut-out: a gradient scrim carries the photo into the type side, so there is no
+     mask, no halo and no hair matting to go wrong. Use this when rembg is unavailable
+     or the photo has a busy background.
+
+     render_html.py photo-split.html out.png --size 1280x720 \
+       --var PHOTO="work/shot.jpg" --var KICKER="..." --var HEADLINE="..." \
+       --var KEYWORD="..." --var CHIPS="a - b - c" --var ACCENT="#FFC43D"
+
+     --var SIDE=left         photo on the left, type right (default: photo right)
+     --var FOCUS="62% 38%"   which part of the photo to keep when it crops
+     --var GRADE=teal-orange | cool | warm | none   cinematic grade over the photo
+     --var SPLIT=56          percent of the frame the photo occupies
+
+     A photo of an identifiable person needs a model release for commercial use -
+     see references/identity-protocol.md. Prefer the user's own photo. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photo split thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --accent: {{ACCENT}}; --base: #05070C; --support: #0D1726; --vignette: 0.58; }
+
+  .ground { position: absolute; inset: 0;
+    background: linear-gradient(140deg, var(--base) 0%, var(--support) 62%, var(--base) 100%); }
+
+  /* the photograph ------------------------------------------------------- */
+  .photo { position: absolute; top: 0; bottom: 0; right: 0; width: 56%;
+    background-size: cover; background-position: center; }
+  .side-left .photo { right: auto; left: 0; }
+
+  /* grade over the photo so it belongs to the design, not pasted into it */
+  .grade { position: absolute; inset: 0; mix-blend-mode: soft-light; opacity: 0; }
+  .grade.on { opacity: 1; }
+  .grade.teal-orange { background: linear-gradient(32deg, #0E4A5F 0%, transparent 46%, #FF8A2B 100%); }
+  .grade.cool  { background: linear-gradient(32deg, #06293F 0%, transparent 55%, #4FC3F7 100%); }
+  .grade.warm  { background: linear-gradient(32deg, #3A1403 0%, transparent 52%, #FFC46B 100%); }
+
+  /* the scrim: photo dissolves into the type side. no mask, no halo. */
+  .scrim { position: absolute; inset: 0;
+    background: linear-gradient(90deg,
+      var(--base) 0%, color-mix(in srgb, var(--base) 97%, transparent) 30%,
+      color-mix(in srgb, var(--base) 78%, transparent) 44%,
+      color-mix(in srgb, var(--base) 34%, transparent) 60%, transparent 82%); }
+  .side-left .scrim { background: linear-gradient(270deg,
+      var(--base) 0%, color-mix(in srgb, var(--base) 97%, transparent) 30%,
+      color-mix(in srgb, var(--base) 78%, transparent) 44%,
+      color-mix(in srgb, var(--base) 34%, transparent) 60%, transparent 82%); }
+  /* a little floor darkening so type never fights detail */
+  .floor { position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.55) 0%, transparent 42%); }
+
+  /* accent edge where the two halves meet - the "designed" tell */
+  .seam { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--accent);
+    opacity: .55; box-shadow: 0 0 26px color-mix(in srgb, var(--accent) 85%, transparent); }
+
+  /* type ------------------------------------------------------------------ */
+  .col { position: absolute; top: 0; bottom: 0; left: 5%; width: 46%; z-index: 6;
+    display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+  .side-left .col { left: auto; right: 5%; text-align: right; align-items: flex-end; }
+
+  .kicker { position: static; font-family: var(--support-font); font-weight: 800;
+    font-size: 25px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+    text-shadow: 0 2px 14px rgba(0,0,0,0.95); }
+  .kicker::after { content: ""; display: block; width: 64px; height: 5px; margin-top: 14px;
+    background: var(--accent); border-radius: 3px;
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 85%, transparent); }
+  .side-left .kicker::after { margin-left: auto; }
+
+  .headline { position: static; font-size: 118px; }
+  .headline .keyword { font-size: 0.58em; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; }
+  .side-left .chips { justify-content: flex-end; }
+  .chip { font-family: var(--support-font); font-weight: 800; font-size: 19px;
+    letter-spacing: 0.07em; text-transform: uppercase; padding: 9px 14px 10px;
+    border-radius: 7px; color: color-mix(in srgb, var(--ink) 92%, transparent);
+    background: rgba(255,255,255,0.07);
+    border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+
+  .logo { left: 5%; bottom: 6%; height: 40px; }
+  .side-left .logo { left: auto; right: 5%; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="ground"></div>
+  <div class="photo" id="photo"><div class="grade" id="grade"></div></div>
+  <div class="scrim"></div>
+  <div class="floor"></div>
+  <div class="seam" id="seam"></div>
+
+  <div class="col">
+    <div class="kicker">{{KICKER}}</div>
+    <h1 class="headline">{{HEADLINE}}<br><span class="keyword">{{KEYWORD}}</span></h1>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <img class="logo" src="{{LOGO}}" alt="" onerror="this.remove()">
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  var stage = document.getElementById('stage');
+  var side = ("{{SIDE}}" || "right").trim().toLowerCase();
+  if (side === "left") stage.classList.add('side-left');
+
+  var split = parseFloat("{{SPLIT}}") || 56;
+  var photo = document.getElementById('photo');
+  photo.style.width = split + '%';
+  var seam = document.getElementById('seam');
+  if (/^(1|on|true|yes)$/i.test(("{{SEAM}}" || "").trim())) {
+    seam.style[side === 'left' ? 'left' : 'right'] = split + '%';
+  } else {
+    seam.remove();          // a hard line reads as two pasted halves
+  }
+
+  var src = "{{PHOTO}}".trim();
+  if (src) {
+    photo.style.backgroundImage = "url('" + src + "')";
+    var focus = ("{{FOCUS}}" || "").trim();
+    if (focus) photo.style.backgroundPosition = focus;
+  } else {
+    photo.remove();
+    if (seam && seam.parentNode) seam.remove();
+  }
+
+  var grade = ("{{GRADE}}" || "teal-orange").trim().toLowerCase();
+  var g = document.getElementById('grade');
+  if (g) {
+    if (grade && grade !== "none") { g.className = 'grade on ' + grade; }
+  }
+
+  var chipText = "{{CHIPS}}".split(/\s*[-|]\s*/).filter(function (s) { return s.trim(); });
+  var chips = document.getElementById('chips');
+  chipText.forEach(function (s) {
+    var c = document.createElement('div');
+    c.className = 'chip'; c.textContent = s.trim();
+    chips.appendChild(c);
+  });
+  if (!chipText.length) chips.remove();
+
+  document.querySelectorAll('.kicker,.headline .keyword').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+
+  var h = document.querySelector('.headline');
+  if (h) {
+    var col = document.querySelector('.col');
+    var maxW = col.clientWidth, maxH = stage.clientHeight * 0.48;
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    var fits = function () { return h.scrollHeight <= maxH && h.scrollWidth <= maxW; };
+    while (size < 200 && fits()) { size += 4; h.style.fontSize = size + 'px'; }
+    while (size > 52 && !fits()) { size -= 4; h.style.fontSize = size + 'px'; }
+  }
+</script>
+</body>
+</html>

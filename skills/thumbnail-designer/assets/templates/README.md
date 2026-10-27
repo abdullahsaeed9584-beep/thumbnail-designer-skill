@@ -16,6 +16,7 @@ textures and props. See `references/style-registers.md`; never mix the two regis
 | `comparison.html` | real before/after or A vs B, diagonal split, warm vs cool | 1280x720 |
 | `urdu-rtl.html` | Urdu/Nastaliq, mirrored Z-pattern, descender room | 1280x720 |
 | `vertical-cover.html` | Shorts / Reels / TikTok | 1080x1920 |
+| `photo-split.html` | **real photograph, full bleed one side, type the other** - no cut-out needed | any |
 | `showcase.html` | **any offer/product/service**: hook left, device right. `DEVICE=browser\|player\|screen\|none` - `screen` drops in YOUR OWN image | any |
 | `text-layer.html` | headline only, transparent - for the `composite.py --text-layer` route | 1280x720 |
 

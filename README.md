@@ -7,7 +7,7 @@ batch-produces premium thumbnails — and proves the result before shipping it.*
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-0B0E14?style=flat-square)](LICENSE)
 ![Skill](https://img.shields.io/badge/type-agent%20skill-2563EB?style=flat-square)
-![Templates](https://img.shields.io/badge/templates-8-16A34A?style=flat-square)
+![Templates](https://img.shields.io/badge/templates-9-16A34A?style=flat-square)
 ![Scripts](https://img.shields.io/badge/scripts-9-0891B2?style=flat-square)
 ![Platforms](https://img.shields.io/badge/platforms-13-F2A20C?style=flat-square)
 
@@ -119,7 +119,7 @@ pasted on.
 
 ## Why this one is different
 
-**It renders.** Eight production HTML/CSS layouts plus a Python compositing pipeline —
+**It renders.** Nine production HTML/CSS layouts plus a Python compositing pipeline —
 background depth, contact shadow, rim light, colour match, gradient type, grain finish. Most
 thumbnail "skills" only produce a brief.
 
@@ -167,7 +167,7 @@ skills/thumbnail-designer/
 │   ├── resize.py             focal-aware multi-platform re-crop
 │   └── fetch_fonts.py        licence-safe Google Fonts
 ├── assets/
-│   ├── templates/            8 production layouts + base.css + impact.css
+│   ├── templates/            9 production layouts + base.css + impact.css
 │   ├── brand-kits/           per-client style systems
 │   └── fonts/                OFL fonts land here
 └── evals/test-prompts.md     25 regression prompts
@@ -208,6 +208,7 @@ python scripts/thumb_test.py out/final.jpg --competitors comp1.jpg comp2.jpg
 | `comparison.html` | real before/after or A vs B, diagonal split, warm vs cool | 1280×720 |
 | `urdu-rtl.html` | Urdu/Nastaliq, mirrored Z-pattern, descender room | 1280×720 |
 | `vertical-cover.html` | Shorts / Reels / TikTok | 1080×1920 |
+| `photo-split.html` | real photograph full-bleed one side, type the other — no cut-out | any |
 | `showcase.html` | any offer/product/service: hook left, device right — `DEVICE=browser/player/screen/none` | any |
 | `text-layer.html` | headline only, transparent — for the compositing route | 1280×720 |
 
@@ -219,9 +220,13 @@ Code-drawn scenery is the fastest way to look AI-made. The skill's order of pref
 **your own photo or screenshot** → `scripts/fetch_stock.py` (real CC0 photography from
 Openverse, no API key) → abstract geometry, and only when abstraction is the point.
 
-`showcase.html --var DEVICE=screen --var SCREEN="my-shot.png"` drops your own image inside the
-rim-lit, tilted device frame — for a video-editing gig that means your actual timeline, which
-beats any stock photo because it is specific, real and yours.
+`photo-split.html` is the most reliable way to use a real photo: it bleeds the image across one
+side and dissolves it into the type side with a gradient scrim, so there is **no cut-out, no
+halo and no hair matting** to go wrong. `showcase.html --var DEVICE=screen` drops your own
+screenshot inside the rim-lit device frame.
+
+A licence is not a model release: never put a stranger's face on a commercial offer. See
+`references/identity-protocol.md`.
 
 ## Non-negotiables
 
