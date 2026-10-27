@@ -53,3 +53,13 @@ First release.
   renderer rather than mocked up elsewhere.
 - Install paths for the `skills` CLI (`npx skills add`), the Claude Code plugin marketplace, and
   manual copy; plus an ASCII diagram of the six-stage pipeline.
+
+## 1.1.0 - 2026-10-27
+
+### Added
+- `service-device.html` - eighth layout, for agency and freelance service offers: service
+  kicker and hook upper-left, tilted browser/device right, faint technical grid, rim light on
+  the device edge. The device content is a deliberately abstract wireframe, never a screenshot
+  of real results and never invented metrics.
+- Its optional `STRAP` support line is OFF by default: at 168px any line under roughly 30px
+  source size turns to mush, which `thumb_test.py` caught on the first build with it enabled.

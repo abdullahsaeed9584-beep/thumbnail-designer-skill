@@ -1,0 +1,153 @@
+<!doctype html>
+<!-- Service-offer 16:9, device-led. For agencies and freelancers: web development,
+     design, SaaS, app builds. Hook upper-left, tilted device right (Z-pattern).
+     The device content is a deliberately ABSTRACT wireframe - never a screenshot of
+     real results and never invented metrics (see references/niche-guide.md, tech row).
+     render_html.py service-device.html out.png \
+       --var KICKER="WEB DEVELOPMENT" --var HEADLINE="SITES THAT" --var KEYWORD="CONVERT" \
+       --var ACCENT="#00E5FF"
+     STRAP is optional and OFF by default: at 168px any line under ~30px source size
+     turns to mush. Only add it for a large-canvas use, and re-run thumb_test.py. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Service device thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root {
+    --accent: {{ACCENT}};
+    --base: #060B16;
+    --support: #0E1B2E;
+    --vignette: 0.62;
+  }
+
+  .grid {   /* faint technical grid - reads as "built", not as decoration */
+    position: absolute; inset: 0; opacity: 0.16;
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--accent) 50%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--accent) 50%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(70% 60% at 68% 42%, #000 0%, transparent 72%);
+            mask-image: radial-gradient(70% 60% at 68% 42%, #000 0%, transparent 72%);
+  }
+
+  .kicker {
+    position: absolute; left: 60px; top: 118px; z-index: 6;
+    font-family: var(--support-font); font-weight: 800; font-size: 27px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); text-shadow: 0 2px 14px rgba(0,0,0,0.9);
+  }
+  .kicker::after {
+    content: ""; display: block; width: 76px; height: 5px; margin-top: 16px;
+    background: var(--accent); border-radius: 3px;
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 80%, transparent);
+  }
+
+  .headline { left: 58px; top: 194px; font-size: 112px; max-width: 540px; }
+
+  .strap {
+    position: absolute; left: 62px; top: 454px; z-index: 6; max-width: 470px;
+    font-family: var(--support-font); font-weight: 700; font-size: 27px;
+    line-height: 1.35; color: color-mix(in srgb, var(--ink) 72%, transparent);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.9);
+  }
+
+  /* ---- tilted browser, kept clear of the duration badge ---- */
+  .scene { position: absolute; right: 46px; top: 172px; z-index: 4; perspective: 1500px; }
+  .browser {
+    width: 624px; border-radius: 16px; overflow: hidden;
+    background: #0C1524; border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+    transform: rotateY(-13deg) rotateX(3deg);
+    box-shadow:
+      -11px 0 0 -6px color-mix(in srgb, var(--accent) 68%, transparent),  /* rim light, left edge */
+      -2px 0 26px color-mix(in srgb, var(--accent) 36%, transparent),
+      38px 44px 54px rgba(0,0,0,0.72),                                      /* cast shadow */
+      10px 14px 16px rgba(0,0,0,0.8);                                       /* contact shadow */
+  }
+  .bar {
+    display: flex; align-items: center; gap: 9px; padding: 15px 18px;
+    background: #16233A; border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .dot { width: 13px; height: 13px; border-radius: 50%; background: #35455F; }
+  .dot:nth-child(1) { background: #FF5F57; }
+  .dot:nth-child(2) { background: #FEBC2E; }
+  .dot:nth-child(3) { background: #28C840; }
+  .addr {
+    flex: 1; height: 19px; margin-left: 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+  }
+  .view { padding: 26px 28px 32px; }
+  .hero-block {
+    height: 112px; border-radius: 10px; margin-bottom: 20px;
+    background: linear-gradient(115deg, color-mix(in srgb, var(--accent) 52%, transparent) 0%,
+                                        color-mix(in srgb, var(--accent) 12%, transparent) 70%);
+  }
+  .line { height: 15px; border-radius: 8px; background: rgba(255,255,255,0.17); margin-bottom: 12px; }
+  .line.w70 { width: 70%; }
+  .line.w45 { width: 45%; }
+  .cards { display: flex; gap: 14px; margin-top: 22px; }
+  .card {
+    flex: 1; height: 82px; border-radius: 10px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .card:nth-child(2) { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+
+  .keylight { right: -220px; top: -260px; width: 860px; height: 860px; }
+  .fg-bokeh.a { left: -60px; bottom: -60px; width: 230px; height: 230px; opacity: .5; }
+  .fg-bokeh.b { right: 120px; bottom: -70px; width: 210px; height: 210px; opacity: .40; }
+  .badge { left: 60px; bottom: 66px; }
+  .logo  { right: 60px; bottom: 150px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg-fallback"></div>
+  <div class="bg" style="background-image:url('{{BG}}')"></div>
+  <div class="grid"></div>
+  <div class="keylight"></div>
+
+  <div class="scene">
+    <div class="browser">
+      <div class="bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="addr"></span>
+      </div>
+      <div class="view">
+        <div class="hero-block"></div>
+        <div class="line w70"></div>
+        <div class="line w45"></div>
+        <div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kicker">{{KICKER}}</div>
+  <h1 class="headline">{{HEADLINE}} <span class="keyword">{{KEYWORD}}</span></h1>
+  <div class="strap">{{STRAP}}</div>
+
+  <div class="badge">{{BADGE}}</div>
+  <img class="logo" src="{{LOGO}}" alt="" onerror="this.remove()">
+
+  <div class="fg-bokeh a"></div>
+  <div class="fg-bokeh b"></div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  document.querySelectorAll('.kicker,.strap,.badge,.headline .keyword').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+  document.querySelectorAll('.bg').forEach(function (el) {
+    if (/url\(['"]?['"]?\)/.test(el.getAttribute('style') || '')) el.remove();
+  });
+  var h = document.querySelector('.headline');
+  if (h) {
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    while (size > 56 && (h.scrollHeight > 250 || h.scrollWidth > 556)) {
+      size -= 4; h.style.fontSize = size + 'px';
+    }
+  }
+</script>
+</body>
+</html>
