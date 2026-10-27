@@ -14,11 +14,12 @@
 <style>
   :root { --accent: {{ACCENT}}; }
   .headline {
-    right: 60px; top: 70px; width: 620px;
+    right: 52px; top: 48px; width: 700px;
     font-family: 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', serif;
-    font-size: 104px; font-weight: 700; line-height: 1.85; letter-spacing: 0;
+    /* Nastaliq reads far smaller than Latin at the same size - start much larger */
+    font-size: 158px; font-weight: 700; line-height: 1.7; letter-spacing: 0;
     text-transform: none; direction: rtl; text-align: right;
-    padding-bottom: 36px;            /* descender room - Nastaliq drops diagonally */
+    padding-bottom: 52px;            /* descender room - Nastaliq drops diagonally */
   }
   .subhead {
     position: absolute; right: 64px; top: 28px; font-size: 26px; z-index: 5;
@@ -39,7 +40,7 @@
   <div class="subhead">{{SUBHEAD}}</div>
   <h1 class="headline">{{HEADLINE}}</h1>
 
-  <img class="subject subject--left" src="{{SUBJECT}}" alt="">
+  <img class="subject subject--left" src="{{SUBJECT}}" alt="" onerror="this.remove()">
 
   <div class="badge">{{BADGE}}</div>
   <div class="fg-bokeh a"></div>
@@ -54,8 +55,8 @@
   var h = document.querySelector('.headline');
   if (h) {
     var size = parseFloat(getComputedStyle(h).fontSize);
-    while (size > 48 && (h.scrollHeight > 390 || h.scrollWidth > 640)) {
-      size -= 4; h.style.fontSize = size + 'px';
+    while (size > 64 && (h.scrollHeight > 430 || h.scrollWidth > 716)) {
+      size -= 6; h.style.fontSize = size + 'px';
     }
   }
 </script>

@@ -41,5 +41,15 @@ First release.
 - Unsupplied colour tokens now fall back to sane defaults - an empty CSS custom property is
   valid but silently breaks every `color-mix()` and gradient that reads it.
 - `vertical-cover.html` keeps the headline clear of the subject's face.
+- Every template image drops itself when its asset is missing, instead of leaving a broken
+  image icon in the render.
+- Urdu headlines start at 158px: Nastaliq reads far smaller than Latin at the same point size,
+  so the old 104px default had no presence at thumbnail scale.
 - `product-led.html`'s callout ring is opt-in (`--var RING=1`) instead of landing on the
   subject by default, where it read as an accidental halo.
+
+### Docs
+- Hero banner, example gallery and proof-test strip in `docs/`, all rendered by the skill's own
+  renderer rather than mocked up elsewhere.
+- Install paths for the `skills` CLI (`npx skills add`), the Claude Code plugin marketplace, and
+  manual copy; plus an ASCII diagram of the six-stage pipeline.

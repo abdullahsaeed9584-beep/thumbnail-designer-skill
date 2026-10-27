@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- Repo hero banner, 1280x640. Rendered with the skill's own renderer:
+       python skills/thumbnail-designer/scripts/render_html.py docs/banner.html docs/banner.png --size 1280x640
+     Fonts resolve to Anton / Archivo Black if fetch_fonts.py has run, else to a
+     system grotesque - the wordmark is designed to hold up either way. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Thumbnail Designer banner</title>
+<style>
+  @font-face { font-family: 'Archivo Black'; src: local('Archivo Black'), url('../skills/thumbnail-designer/assets/fonts/ArchivoBlack-Regular.ttf') format('truetype'); font-display: block; }
+  @font-face { font-family: 'Montserrat'; src: local('Montserrat'), url('../skills/thumbnail-designer/assets/fonts/Montserrat-Variable.ttf') format('truetype'); font-weight: 100 900; font-display: block; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1280px; height: 640px; overflow: hidden; background: #FFFFFF; }
+
+  .stage {
+    position: relative; width: 1280px; height: 640px; background: #FFFFFF;
+    padding: 58px 64px 0; -webkit-font-smoothing: antialiased;
+  }
+
+  .wordmark {
+    font-family: 'Archivo Black', 'Helvetica Neue', 'Arial Black', sans-serif;
+    color: #0B0E14; line-height: 0.82; letter-spacing: -0.045em;
+    font-size: 188px; text-transform: none;
+  }
+  .wordmark .l2 { display: block; text-align: right; }
+
+  .pills { position: absolute; left: 64px; right: 64px; bottom: 104px; display: flex; gap: 14px; }
+  .pill {
+    flex: 1 1 0; text-align: center; border-radius: 999px; padding: 18px 0 20px;
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 800; font-size: 31px; letter-spacing: -0.01em; color: #FFFFFF;
+  }
+  .p1 { background: #2563EB; } /* concept  */
+  .p2 { background: #DC2626; } /* render   */
+  .p3 { background: #F2A20C; } /* light    */
+  .p4 { background: #16A34A; } /* type     */
+  .p5 { background: #0891B2; } /* prove    */
+  .p6 { background: #7C3AED; } /* score    */
+  .p7 { background: #0B0E14; } /* ship     */
+
+  .strap {
+    position: absolute; left: 64px; right: 64px; bottom: 44px;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 32px;
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700; font-size: 20px; color: #5B6472; letter-spacing: -0.005em;
+    white-space: nowrap;
+  }
+  .strap b { color: #0B0E14; font-weight: 800; }
+
+  /* top accent rule, mirrors the accent discipline the skill enforces */
+  .rule { position: absolute; left: 0; top: 0; height: 10px; width: 100%;
+          background: linear-gradient(90deg, #2563EB, #0891B2 28%, #16A34A 48%, #F2A20C 70%, #DC2626 100%); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="rule"></div>
+  <div class="wordmark">Thumbnail<span class="l2">Designer</span></div>
+
+  <div class="pills">
+    <div class="pill p1">Concept</div>
+    <div class="pill p2">Render</div>
+    <div class="pill p3">Light</div>
+    <div class="pill p4">Type</div>
+    <div class="pill p5">Prove</div>
+    <div class="pill p6">Score</div>
+    <div class="pill p7">Ship</div>
+  </div>
+
+  <div class="strap">
+    <span>A Claude skill that <b>renders, proves and scores</b> premium thumbnails</span>
+    <span>YouTube &middot; Shorts &middot; Reels &middot; TikTok &middot; OG</span>
+  </div>
+</div>
+</body>
+</html>
