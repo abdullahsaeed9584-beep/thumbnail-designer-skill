@@ -23,7 +23,7 @@ textures and props. See `references/style-registers.md`; never mix the two regis
 ## Tokens (override with `--var`)
 `ACCENT` the single accent colour - `BG` background image path - `SUBJECT` cut-out PNG -
 `HEADLINE` + `KEYWORD` (keyword gets the accent) - `SUBHEAD` small kicker line -
-`BADGE` corner label - `LOGO` brand mark - `KICKER` label line - `CHIPS` (split on ` - `) - `DEVICE` + `SCREEN` for showcase - `ALIGN`, `LEFT_IMG`, `RIGHT_IMG`, `LEFT_LABEL`, `RIGHT_LABEL` per template.
+`PHOTO` + `SIDE`/`SPLIT`/`FOCUS`/`GRADE` and `GLOW`/`GLOW_SHAPE`/`GLOW_POS`/`GLOW_SIZE`/`GLOW_STRENGTH` for photo-split - `BADGE` corner label - `LOGO` brand mark - `KICKER` label line - `CHIPS` (split on ` - `) - `DEVICE` + `SCREEN` for showcase - `ALIGN`, `LEFT_IMG`, `RIGHT_IMG`, `LEFT_LABEL`, `RIGHT_LABEL` per template.
 Unused placeholders render as nothing, and empty nodes are removed by the inline script.
 
 ## Example
@@ -43,3 +43,17 @@ render, look, then remove it before exporting.
 Edit a copy, not the original, when a client needs a variant - and save the client's token
 values to `assets/brand-kits/<client>.md`. Keep the layer order in `base.css` intact: it is
 the render pipeline, and reordering it is what makes composites look pasted.
+
+## Using a real photograph
+
+`photo-split.html` is the reliable route. It bleeds the photo across one side and dissolves it
+into the type side with a gradient scrim that tracks `SPLIT`, so there is no mask, no halo and
+no hair matting. `GLOW` adds a screen-blend backlight behind the subject - a halo **ring** by
+default, because a filled disc washes the face out under screen blend.
+
+```
+render_html.py photo-split.html out.png --size 1280x720   --var PHOTO="work/me.jpg" --var KICKER="FITNESS" --var HEADLINE="30 DAYS"   --var KEYWORD="NO EXCUSES" --var ACCENT="#00E5FF" --var GLOW="#00E5FF"   --var GRADE="cool" --var SPLIT=64 --var FOCUS="54% 30%" --var GLOW_POS="72% 36%"
+```
+
+Dark-background portraits blend best. A licence is not a model release - see
+`references/identity-protocol.md` before using anyone else's face.

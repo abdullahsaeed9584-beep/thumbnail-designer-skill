@@ -135,3 +135,22 @@ read as synthetic.
 ### Changed
 - The accent seam is opt-in and the scrim feather is longer. A hard line at the join advertised
   the composite as two pasted halves instead of reading as one photograph.
+
+## 1.5.0 - 2026-10-27
+
+### Added
+- **Backlight glow in `photo-split.html`** - `GLOW`, `GLOW_SHAPE`, `GLOW_POS`, `GLOW_SIZE`,
+  `GLOW_STRENGTH`. Screen blend, because the photo is full-bleed rather than cut out, so a
+  layer underneath would be invisible. Default shape is a halo **ring**: a filled disc centred
+  on the head washes the face out under screen blend, which is the mistake the first pass made.
+- `docs/style-photo-split.png` - three real-photo examples across fitness, business and podcast
+  niches, two layout directions, three palettes, all from the one template.
+
+### Changed
+- README restructured: the output gallery now sits at the top under "What it makes" instead of
+  being buried near the licence.
+
+### Fixed
+- **The scrim fade now tracks `SPLIT`.** With fixed gradient stops a wide photo ended inside
+  open frame and showed its straight edge, while a narrow one got scrimmed into mud. The stops
+  are computed from the split position.

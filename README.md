@@ -15,6 +15,15 @@ batch-produces premium thumbnails — and proves the result before shipping it.*
 
 ---
 
+## What it makes
+
+![Photo-split examples](docs/style-photo-split.png)
+
+<sub>One template, three niches, three palettes, both directions — real photographs,
+graded and backlit by the skill. Nothing here is drawn or AI-generated.</sub>
+
+---
+
 ## Quick Start
 
 **Fastest path — any agent, one command.** The open
@@ -222,8 +231,11 @@ Openverse, no API key) → abstract geometry, and only when abstraction is the p
 
 `photo-split.html` is the most reliable way to use a real photo: it bleeds the image across one
 side and dissolves it into the type side with a gradient scrim, so there is **no cut-out, no
-halo and no hair matting** to go wrong. `showcase.html --var DEVICE=screen` drops your own
-screenshot inside the rim-lit device frame.
+halo and no hair matting** to go wrong. `GLOW` adds a screen-blend backlight behind the
+subject — a halo ring, so it lights the air around them without washing out the face.
+
+`showcase.html --var DEVICE=screen` drops your own screenshot inside the rim-lit device
+frame instead - for a portfolio or an editing gig, your actual work beats any stock photo.
 
 A licence is not a model release: never put a stranger's face on a commercial offer. See
 `references/identity-protocol.md`.
