@@ -63,3 +63,32 @@ First release.
   of real results and never invented metrics.
 - Its optional `STRAP` support line is OFF by default: at 168px any line under roughly 30px
   source size turns to mush, which `thumb_test.py` caught on the first build with it enabled.
+
+## 1.2.0 - 2026-10-27
+
+Researched how high-performing thumbnails are actually built - the YouTube search/gig-marketplace
+register, plus current practice guidance - and taught the skill the look it was missing.
+
+### Added
+- **`references/style-registers.md`** - three registers (Creator High-Impact, Cinematic Editorial,
+  Clean Corporate), when each applies, and the full craft recipe for each. The skill now picks a
+  register BEFORE concepting, and commits to it.
+- **`assets/templates/impact.css`** - the loud creator type system: heavy black stroke with
+  `paint-order: stroke fill`, hard 3D extrude per colour role, angled sticker bars, saturated
+  grounds, sunburst / halftone / perspective-grid textures, hard-lit cut-out treatment, and
+  props (play button, growth arrow, coin, badge, subscribe pill).
+- **`assets/templates/creator-impact.html`** - ninth layout. Stacked tri-line hook, kicker
+  sticker, 2-4 rotated props, subject right. With no cut-out supplied it automatically
+  rebalances to a centred type-hero rather than leaving half the frame dead.
+- Verified at 168px: all three sample builds stay fully legible, which is the point of the
+  register.
+
+### Changed
+- `SKILL.md` workflow step 4 is now "Register, then concept", with routing for loud/creator asks.
+- **`cases.md` §M rewritten around YouTube's Test & Compare**, which resolves by **watch time
+  share, not CTR**; outcomes are Winner / Preferred / None, results take a few days to two weeks,
+  and the report is in the Reach tab. Variants must be visually diverse or the test cannot
+  resolve. This is why an overselling thumbnail can win the click and still lose the test.
+- The register explicitly still refuses fabricated performance numbers - fake CTR figures, view
+  counts or analytics screenshots - which are common in that market. Loud is a style; dishonest
+  is a defect.

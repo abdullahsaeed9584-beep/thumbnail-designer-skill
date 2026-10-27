@@ -7,7 +7,7 @@ batch-produces premium thumbnails — and proves the result before shipping it.*
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-0B0E14?style=flat-square)](LICENSE)
 ![Skill](https://img.shields.io/badge/type-agent%20skill-2563EB?style=flat-square)
-![Templates](https://img.shields.io/badge/templates-8-16A34A?style=flat-square)
+![Templates](https://img.shields.io/badge/templates-9-16A34A?style=flat-square)
 ![Scripts](https://img.shields.io/badge/scripts-8-0891B2?style=flat-square)
 ![Platforms](https://img.shields.io/badge/platforms-12-F2A20C?style=flat-square)
 
@@ -73,6 +73,30 @@ Urdu headline: امیر کیسے بنیں
 
 ---
 
+## Two aesthetic registers
+
+A thumbnail is not one look. The skill picks the register from the audience and niche
+(`references/style-registers.md`) and commits to it — mixing them is what reads as amateur.
+
+**A — Creator High-Impact.** The loud YouTube feed language: stacked 2–3 line type with a heavy
+black stroke *and* a hard 3D extrude, per-line colour roles, saturated grounds with sunburst,
+halftone or perspective-grid texture, hard-lit cut-out subject, 2–4 rotated props. Default for
+general creator, gig, gaming and reaction work.
+
+![Creator high-impact examples](docs/style-creator-impact.png)
+
+<sub>Rendered by the skill. All three stay fully legible at 168 px — the stroke-plus-extrude is
+exactly why this register wins the mobile feed. The subject slot takes your cut-out photo;
+without one the type becomes the subject automatically.</sub>
+
+**B — Cinematic Editorial.** Dark base, one restrained accent, depth of field, rim light, gradient
+type with a soft dark glow, 2–3% grain. For documentary, long-form, business and premium brands.
+
+**C — Clean Corporate.** Light ground, generous margins, no glow, one accent. For B2B, SaaS,
+education and medical.
+
+---
+
 ## The pipeline
 
 ```
@@ -95,7 +119,7 @@ pasted on.
 
 ## Why this one is different
 
-**It renders.** Eight production HTML/CSS layouts plus a Python compositing pipeline —
+**It renders.** Nine production HTML/CSS layouts plus a Python compositing pipeline —
 background depth, contact shadow, rim light, colour match, gradient type, grain finish. Most
 thumbnail "skills" only produce a brief.
 
@@ -120,6 +144,7 @@ clickbait the video doesn't pay off, and no claiming an edit it didn't actually 
 skills/thumbnail-designer/
 ├── SKILL.md                  entry point: workflow, routing, hard rules
 ├── references/
+│   ├── style-registers.md    pick the aesthetic register before concepting
 │   ├── premium-standard.md   the quality bar — read on every build
 │   ├── render-pipeline.md    the 10-layer build order and the commands
 │   ├── composition-type.md   composition, typography, graphics, Urdu/RTL
@@ -142,7 +167,7 @@ skills/thumbnail-designer/
 │   ├── resize.py             focal-aware multi-platform re-crop
 │   └── fetch_fonts.py        licence-safe Google Fonts
 ├── assets/
-│   ├── templates/            8 production layouts + base.css
+│   ├── templates/            9 production layouts + base.css + impact.css
 │   ├── brand-kits/           per-client style systems
 │   └── fonts/                OFL fonts land here
 └── evals/test-prompts.md     25 regression prompts
@@ -176,6 +201,7 @@ python scripts/thumb_test.py out/final.jpg --competitors comp1.jpg comp2.jpg
 
 | File | Use | Size |
 |---|---|---|
+| `creator-impact.html` | high-impact creator register: stroked + extruded stacked type, props | 1280×720 |
 | `person-led.html` | face-led, hook upper-left, subject right, text masked behind subject | 1280×720 |
 | `text-hero.html` | no subject photo, or the words are the idea | 1280×720 |
 | `product-led.html` | hero object or a single data indicator on a studio sweep | 1280×720 |

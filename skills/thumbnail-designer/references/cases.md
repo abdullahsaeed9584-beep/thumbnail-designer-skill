@@ -39,7 +39,17 @@ Give 3 genuinely different concepts. Per concept: name - visual idea - focal sub
 Build a shared style system first (palette, type, layout grid, logo spot), then vary concept, focal point and headline per title. Preserve identity in every output. Export separately with proper names and verify each one. Near-duplicates are a fail.
 
 ## M. A/B variants (the one exception to "no near-duplicates")
-Default 3 variants, each varying exactly ONE major lever: (A) headline hook, (B) focal point/composition, (C) colour/mood. Same underlying truth about the video. State in one line what differs and the hypothesis. Never claim which will win.
+Default **3** variants - YouTube's built-in Test & Compare accepts up to three.
+Each varies exactly ONE major lever: (A) headline hook, (B) focal point/composition, (C) colour/mood. Same underlying truth about the video. State in one line what differs and the hypothesis. Never claim which will win.
+
+**Make them visually diverse.** YouTube says thumbnail diversity and impressions speed a result up, so three near-identical variants waste the test. One lever changed, but changed hard.
+
+**Tell the user how the test actually resolves**, because it changes what "winning" means:
+- Test & Compare picks the winner by **watch time share, not click-through rate** - YouTube's stated reason is that CTR-only tools can pick a different, worse winner.
+- Outcomes are **Winner** (statistically significant), **Preferred** (likely better, not conclusive) or **None** (all similar - the first thumbnail uploaded stays).
+- Results take a few days up to two weeks; more views resolve faster.
+- The report lives in the **Reach tab** of YouTube Analytics.
+This is why a thumbnail that oversells loses: it can win the click and still lose the test.
 
 ## N. Critique / audit
 Run `scorecard.md` in full: 10 axes, 0-4, one line of evidence each. Then the top 3 fixes ordered by impact, what to keep, and an offer to rebuild. Run `thumb_test.py`, `contrast_check.py --preview` and `safe_zone_overlay.py` on any image supplied, and look at the results.

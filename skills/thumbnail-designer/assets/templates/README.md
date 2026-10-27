@@ -3,8 +3,13 @@
 Production HTML/CSS layouts rendered to PNG by `scripts/render_html.py`. All share `base.css`,
 which holds the design tokens and the layer stack from `references/render-pipeline.md`.
 
+`creator-impact.html` additionally loads **`impact.css`**, which carries the loud creator
+register - heavy stroke plus hard 3D extrude, saturated grounds, sunburst/halftone/grid
+textures and props. See `references/style-registers.md`; never mix the two registers.
+
 | File | Use | Size |
 |---|---|---|
+| `creator-impact.html` | **high-impact creator register**: stacked stroked/extruded type, saturated ground, props | 1280x720 |
 | `person-led.html` | face-led 16:9, hook upper-left, subject right, text masked behind subject | 1280x720 |
 | `text-hero.html` | no subject photo, or the words are the idea | 1280x720 |
 | `product-led.html` | hero object or a single data indicator on a studio sweep | 1280x720 |

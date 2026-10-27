@@ -14,7 +14,7 @@ The quality bar is `references/premium-standard.md` — read it on every build. 
 1. **Classify** inputs + intent (routing table below). Cases combine; don't treat them as exclusive.
 2. **Detect tools** → `references/tools-fallback.md`. Tier 1 code render, Tier 2 Canva connector, Tier 3 brief only. Use the highest available. Never claim an edit you did not execute.
 3. **Platform** → `references/platform-specs.md` (size, safe zones, file limit).
-4. **Concept**: ONE idea, ONE focal point, ONE hook. Headline 2-5 words from `references/hooks.md`; layout + type from `references/composition-type.md`.
+4. **Register, then concept.** Pick the style register first (`references/style-registers.md`): **A Creator High-Impact** (loud feed, creators, gigs, gaming - the default for a general YouTube ask), **B Cinematic Editorial**, **C Clean Corporate**. Commit to one; never mix. Then: ONE idea, ONE focal point, ONE hook. Headline 2-5 words from `references/hooks.md`; layout + type from `references/composition-type.md`.
 5. **Build in layer order** → `references/render-pipeline.md`:
    background → depth (blur/vignette) → subject cutout → contact shadow → rim light → colour match → headline → graphic cues → foreground depth → finish pass.
 6. **Prove it** (not optional):
@@ -27,7 +27,8 @@ The quality bar is `references/premium-standard.md` — read it on every build. 
 ## Routing
 | Input / intent | Read |
 |---|---|
-| Any build at all | `references/premium-standard.md` + `references/render-pipeline.md` |
+| Any build at all | `references/style-registers.md` → `references/premium-standard.md` + `references/render-pipeline.md` |
+| Loud / creator / gig / gaming style, or "make it pop" | `references/style-registers.md` §A + `assets/templates/creator-impact.html` |
 | Any personal photo (face/hair) | `references/identity-protocol.md` (MANDATORY) |
 | Topic only / title only | `references/cases.md` §A-B, `references/niche-guide.md`, `references/hooks.md` |
 | Reference thumbnail (+photo) | `references/cases.md` §D-E |

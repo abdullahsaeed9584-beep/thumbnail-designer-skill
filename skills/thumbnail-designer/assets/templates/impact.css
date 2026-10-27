@@ -1,0 +1,172 @@
+/* Creator High-Impact register. Loads AFTER base.css and overrides its type treatment.
+   base.css  = cinematic editorial (gradient fills, soft dark glow, restraint)
+   impact.css = loud creator style (heavy stroke, hard 3D extrude, saturated grounds)
+   See references/style-registers.md. Commit to one register - never mix them. */
+
+:root {
+  --impact-stroke: 14px;          /* black outline width at 1280x720 */
+  --impact-extrude: #6B7280;      /* extrude colour for the white line */
+  --yellow: #FFD400;
+  --red: #FF2A2A;
+  --green: #22C55E;
+}
+
+/* ---------------------------------------------------------------- type ---- */
+.headline--impact {
+  font-family: var(--display);
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  /* kill the base.css gradient-clip treatment */
+  background: none;
+  -webkit-background-clip: border-box;
+          background-clip: border-box;
+  color: #FFFFFF;
+  -webkit-text-fill-color: #FFFFFF;
+  /* the outline: paint-order puts the stroke BEHIND the glyph so it stays crisp */
+  -webkit-text-stroke: var(--impact-stroke) #000000;
+  paint-order: stroke fill;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.55));
+}
+
+.hl-line { display: block; }
+/* A smaller line needs a thinner stroke and its own leading, or the hero line eats it. */
+.hl-line--sm {
+  font-size: 0.46em; line-height: 1.04; margin-bottom: 0.05em;
+  -webkit-text-stroke-width: 7px;
+}
+.hl-line--md { font-size: 0.72em; line-height: 0.98; -webkit-text-stroke-width: 10px; }
+
+/* Per-line colour roles. One accent line only - never colour every line.
+   Each carries its own hard 3D extrude in a darker shade of its own fill. */
+.hl-line--white {
+  -webkit-text-fill-color: #FFFFFF;
+  text-shadow: 0 5px 0 #7C8595, 0 10px 0 #4A525F, 0 15px 0 #2C323B;
+}
+.hl-line--yellow {
+  -webkit-text-fill-color: var(--yellow);
+  text-shadow: 0 5px 0 #C08A00, 0 10px 0 #8A6200, 0 15px 0 #5C4100;
+}
+.hl-line--red {
+  -webkit-text-fill-color: var(--red);
+  text-shadow: 0 5px 0 #B01212, 0 10px 0 #7E0C0C, 0 15px 0 #560808;
+}
+.hl-line--accent {
+  -webkit-text-fill-color: var(--accent);
+  text-shadow: 0 5px 0 rgba(0, 0, 0, 0.45), 0 10px 0 rgba(0, 0, 0, 0.35), 0 15px 0 rgba(0, 0, 0, 0.25);
+}
+.hl-line--tilt { transform: rotate(-3deg); transform-origin: left center; }
+
+/* Angled colour bar behind one word - the "sticker" move */
+.hl-bar {
+  display: inline-block; padding: 0.02em 0.16em 0.06em;
+  background: var(--red); transform: rotate(-2.5deg);
+  -webkit-text-stroke: 0; color: #FFFFFF; -webkit-text-fill-color: #FFFFFF;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: 0 10px 0 rgba(0, 0, 0, 0.3);
+}
+.hl-bar--yellow { background: var(--yellow); color: #111; -webkit-text-fill-color: #111; }
+
+/* Small kicker label, sticker style */
+.impact-kicker {
+  position: absolute; z-index: 7;
+  font-family: var(--support-font); font-weight: 900; font-size: 30px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 9px 20px 11px; border-radius: 8px; transform: rotate(-2deg);
+  background: var(--yellow); color: #111111;
+  box-shadow: 0 9px 0 rgba(0, 0, 0, 0.32), 0 16px 26px rgba(0, 0, 0, 0.5);
+}
+
+/* --------------------------------------------------------- backgrounds ---- */
+.ground {
+  position: absolute; inset: 0;
+  background: linear-gradient(145deg, var(--g1) 0%, var(--g2) 100%);
+}
+.sunburst {
+  position: absolute; inset: -25%; opacity: 0.30;
+  background: repeating-conic-gradient(from 0deg at 50% 48%,
+    rgba(255,255,255,0.85) 0deg 5deg, rgba(255,255,255,0) 5deg 11deg);
+  -webkit-mask-image: radial-gradient(60% 60% at 50% 48%, #000 0%, transparent 74%);
+          mask-image: radial-gradient(60% 60% at 50% 48%, #000 0%, transparent 74%);
+}
+.halftone {
+  position: absolute; inset: 0; opacity: 0.22;
+  background-image: radial-gradient(rgba(255,255,255,0.9) 1.6px, transparent 1.7px);
+  background-size: 15px 15px;
+  -webkit-mask-image: linear-gradient(200deg, #000 0%, transparent 62%);
+          mask-image: linear-gradient(200deg, #000 0%, transparent 62%);
+}
+.grid-persp {
+  position: absolute; left: -30%; right: -30%; bottom: -14%; height: 72%;
+  opacity: 0.30; transform: perspective(540px) rotateX(62deg);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.75) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255,255,255,0.75) 2px, transparent 2px);
+  background-size: 62px 62px;
+  -webkit-mask-image: linear-gradient(#000 0%, transparent 78%);
+          mask-image: linear-gradient(#000 0%, transparent 78%);
+}
+.vignette--hard {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(108% 92% at 50% 46%, rgba(0,0,0,0) 32%, rgba(0,0,0,0.72) 100%);
+}
+
+/* Coloured glow pad behind the cut-out subject */
+.glow-pad {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(255,255,255,0.55) 0%, transparent 66%);
+  filter: blur(26px);
+}
+
+/* Hard-lit cut-out: white rim, hard shadow, no soft cinematic falloff */
+.subject--impact {
+  filter:
+    drop-shadow(0 0 0 #FFFFFF)
+    drop-shadow(5px 0 0 #FFFFFF) drop-shadow(-5px 0 0 #FFFFFF)
+    drop-shadow(0 5px 0 #FFFFFF) drop-shadow(0 -5px 0 #FFFFFF)
+    drop-shadow(16px 20px 0 rgba(0, 0, 0, 0.42))
+    drop-shadow(0 26px 34px rgba(0, 0, 0, 0.6));
+}
+
+/* --------------------------------------------------------------- props ---- */
+.prop { position: absolute; z-index: 8; filter: drop-shadow(0 12px 18px rgba(0,0,0,0.55)); }
+
+.prop--play {
+  width: 104px; height: 74px; border-radius: 20px; background: #FF0033;
+  display: flex; align-items: center; justify-content: center;
+}
+.prop--play::after {
+  content: ""; width: 0; height: 0; margin-left: 6px;
+  border-top: 18px solid transparent; border-bottom: 18px solid transparent;
+  border-left: 30px solid #FFFFFF;
+}
+.prop--arrow { width: 68px; height: 104px; }
+.prop--arrow::before {   /* head */
+  content: ""; position: absolute; left: 0; top: 0; width: 0; height: 0;
+  border-left: 34px solid transparent; border-right: 34px solid transparent;
+  border-bottom: 48px solid var(--green);
+}
+.prop--arrow::after {    /* stem */
+  content: ""; position: absolute; left: 21px; top: 46px;
+  width: 26px; height: 58px; background: var(--green);
+}
+.prop--badge {
+  font-family: var(--support-font); font-weight: 900; font-size: 25px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 11px 20px; border-radius: 10px; background: #FFFFFF; color: #111111;
+  box-shadow: 0 8px 0 rgba(0,0,0,0.28);
+}
+.prop--sub {
+  font-family: var(--support-font); font-weight: 900; font-size: 24px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 12px 24px; border-radius: 8px; background: #FF0033; color: #FFFFFF;
+}
+.prop--coin {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: linear-gradient(160deg, #FFE477 0%, #F2A20C 60%, #A96F00 100%);
+  border: 5px solid #FFF0B8;
+}
+.sparkle {
+  position: absolute; z-index: 8; border-radius: 50%; background: #FFFFFF;
+  box-shadow: 0 0 18px 6px rgba(255, 255, 255, 0.85);
+}

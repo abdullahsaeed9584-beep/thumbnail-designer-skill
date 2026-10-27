@@ -1,0 +1,147 @@
+<!doctype html>
+<!-- Creator High-Impact 16:9 - the loud YouTube feed register.
+     Stacked tri-line type with heavy stroke + hard 3D extrude, saturated ground with
+     sunburst/halftone/grid texture, hard-lit cut-out subject, 2-4 rotated props.
+     See references/style-registers.md §A.
+
+     render_html.py creator-impact.html out.png \
+       --var LINE1="PRO SETUP" --var LINE2="UNDER" --var LINE3="$500" \
+       --var KICKER="2026 BUILD" --var SUBJECT="work/cut.png" \
+       --var G1="#2B1065" --var G2="#C2185B" --var ACCENT="#FFD400" --var TEXTURE="sunburst"
+
+     LINE2 is the hero line (largest). LINE1 is the small setup line, LINE3 the payload.
+     TEXTURE: sunburst | halftone | grid | none.   PROPS: play,arrow,coin,sub,badge
+     Identity rules still apply in full - loud styling never licenses editing a face. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Creator impact thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="impact.css">
+<style>
+  :root {
+    --accent: {{ACCENT}};
+    --g1: {{G1}};
+    --g2: {{G2}};
+  }
+
+  .headline--impact {
+    position: absolute; left: 54px; top: 118px; z-index: 6;
+    font-size: 132px; max-width: 700px;
+  }
+  .hl-line { white-space: nowrap; }
+  /* No cut-out supplied: the type is the subject, so give it the whole frame. */
+  .no-subject .headline--impact {
+    left: 50%; right: auto; top: 150px; transform: translateX(-50%);
+    max-width: 1150px; text-align: center;
+  }
+  .no-subject .hl-line--tilt { transform-origin: center; }
+  .no-subject .impact-kicker { left: 50%; top: 56px; transform: translateX(-50%) rotate(-2deg); }
+  .no-subject .glow-pad { right: auto; left: 50%; margin-left: -330px; top: 120px; }
+  .no-subject .p-arrow { right: 74px; top: 62px; }
+  .no-subject .p-coin  { right: 120px; bottom: 90px; }
+
+  .impact-kicker { left: 58px; top: 48px; }
+
+  .subject { right: 0; height: 100%; }
+  .glow-pad { right: -70px; top: 40px; width: 620px; height: 620px; }
+
+  .prop.p-play  { left: 44px;  bottom: 56px;  transform: rotate(-11deg); }
+  .prop.p-arrow { right: 420px; top: 56px;    transform: rotate(13deg); }
+  .prop.p-badge { left: 58px;  bottom: 168px; transform: rotate(-3deg); }
+  .prop.p-coin  { right: 352px; bottom: 92px; transform: rotate(9deg); }
+  .prop.p-sub   { left: 300px; bottom: 60px;  transform: rotate(-5deg); }
+
+  .sparkle.s1 { left: 328px; top: 92px;  width: 11px; height: 11px; }
+  .sparkle.s2 { right: 330px; top: 236px; width: 8px;  height: 8px; }
+  .sparkle.s3 { left: 150px; bottom: 262px; width: 9px; height: 9px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="ground"></div>
+  <div class="bg bg--sharp" style="background-image:url('{{BG}}')"></div>
+  <div class="texture"></div>
+  <div class="glow-pad"></div>
+
+  <img class="subject subject--impact" src="{{SUBJECT}}" data-src="{{SUBJECT}}" alt="">
+
+  <div class="impact-kicker">{{KICKER}}</div>
+  <h1 class="headline--impact">
+    <span class="hl-line hl-line--white hl-line--sm">{{LINE1}}</span>
+    <span class="hl-line hl-line--white">{{LINE2}}</span>
+    <span class="hl-line hl-line--accent hl-line--tilt">{{LINE3}}</span>
+  </h1>
+
+  <div class="prop prop--play p-play"></div>
+  <div class="prop prop--arrow p-arrow"></div>
+  <div class="prop prop--badge p-badge">{{BADGE}}</div>
+  <div class="prop prop--coin p-coin"></div>
+  <div class="prop prop--sub p-sub">{{SUB}}</div>
+
+  <div class="sparkle s1"></div>
+  <div class="sparkle s2"></div>
+  <div class="sparkle s3"></div>
+
+  <div class="vignette--hard"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  // Texture choice
+  var tex = ("{{TEXTURE}}" || "sunburst").trim().toLowerCase();
+  var node = document.querySelector('.texture');
+  var map = { sunburst: 'sunburst', halftone: 'halftone', grid: 'grid-persp' };
+  if (map[tex]) { node.className = map[tex]; } else { node.remove(); }
+
+  // Drop empty text slots so nothing leaves a hole
+  document.querySelectorAll('.hl-line,.impact-kicker,.prop--badge,.prop--sub').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+
+  // Props are opt-in: --var PROPS="play,arrow,coin" keeps only those.
+  // Default keeps play + arrow only - style-registers.md caps props at 2-4.
+  var want = ("{{PROPS}}" || "play,arrow").split(',').map(function (s) { return s.trim(); });
+  [['p-play', 'play'], ['p-arrow', 'arrow'], ['p-badge', 'badge'],
+   ['p-coin', 'coin'], ['p-sub', 'sub']].forEach(function (pair) {
+    if (want.indexOf(pair[1]) === -1) {
+      document.querySelectorAll('.' + pair[0]).forEach(function (el) { el.remove(); });
+    }
+  });
+
+  // Fit: grow to fill, then back off until it clears. Shrink-only left the frame empty.
+  function fit() {
+    var h = document.querySelector('.headline--impact');
+    if (!h) return;
+    var solo = !!document.querySelector('.no-subject');
+    var maxW = solo ? 1120 : 716;
+    var maxH = solo ? 400 : 452;
+    var fits = function () { return h.scrollHeight <= maxH && h.scrollWidth <= maxW; };
+    h.style.fontSize = '132px';
+    var size = 132;
+    while (size < 232 && fits()) { size += 4; h.style.fontSize = size + 'px'; }
+    while (size > 60 && !fits()) { size -= 4; h.style.fontSize = size + 'px'; }
+  }
+
+  // Decide subject vs no-subject SYNCHRONOUSLY. onerror fires async, so testing for the
+  // element's absence races the layout and silently leaves half the frame dead.
+  var stage = document.querySelector('.stage');
+  var subj = document.querySelector('.subject');
+  var goSolo = function () {
+    if (subj && subj.parentNode) subj.remove();
+    stage.classList.add('no-subject');
+  };
+  if (!subj || !(subj.getAttribute('data-src') || '').trim()) {
+    goSolo();
+  } else {
+    subj.addEventListener('error', function () { goSolo(); fit(); });
+  }
+
+  document.querySelectorAll('.bg').forEach(function (el) {
+    if (/url\(['"]?['"]?\)/.test(el.getAttribute('style') || '')) el.remove();
+  });
+
+  fit();
+</script>
+</body>
+</html>
