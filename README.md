@@ -25,7 +25,7 @@ background replacement, cinematic grading, and CTR-focused critique.
 **As a Claude Code plugin (recommended)**
 
 ```bash
-/plugin marketplace add <your-github-user>/thumbnail-designer-skill
+/plugin marketplace add abdullahsaeed9584-beep/thumbnail-designer-skill
 /plugin install thumbnail-designer
 ```
 
