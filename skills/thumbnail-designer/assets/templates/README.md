@@ -15,14 +15,14 @@ textures and props. See `references/style-registers.md`; never mix the two regis
 | `product-led.html` | hero object or a single data indicator on a studio sweep | 1280x720 |
 | `comparison.html` | real before/after or A vs B, diagonal split, warm vs cool | 1280x720 |
 | `urdu-rtl.html` | Urdu/Nastaliq, mirrored Z-pattern, descender room | 1280x720 |
-| `service-device.html` | agency/service offer: hook left, tilted device right, abstract UI | 1280x720 |
 | `vertical-cover.html` | Shorts / Reels / TikTok | 1080x1920 |
+| `showcase.html` | **any offer/product/service**: hook left, device right. `DEVICE=browser\|player\|screen\|none` - `screen` drops in YOUR OWN image | any |
 | `text-layer.html` | headline only, transparent - for the `composite.py --text-layer` route | 1280x720 |
 
 ## Tokens (override with `--var`)
 `ACCENT` the single accent colour - `BG` background image path - `SUBJECT` cut-out PNG -
 `HEADLINE` + `KEYWORD` (keyword gets the accent) - `SUBHEAD` small kicker line -
-`BADGE` corner label - `LOGO` brand mark - `KICKER` service label - `STRAP` support line - `ALIGN`, `LEFT_IMG`, `RIGHT_IMG`, `LEFT_LABEL`, `RIGHT_LABEL` per template.
+`BADGE` corner label - `LOGO` brand mark - `KICKER` label line - `CHIPS` (split on ` - `) - `DEVICE` + `SCREEN` for showcase - `ALIGN`, `LEFT_IMG`, `RIGHT_IMG`, `LEFT_LABEL`, `RIGHT_LABEL` per template.
 Unused placeholders render as nothing, and empty nodes are removed by the inline script.
 
 ## Example

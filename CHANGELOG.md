@@ -92,3 +92,33 @@ register, plus current practice guidance - and taught the skill the look it was 
 - The register explicitly still refuses fabricated performance numbers - fake CTR figures, view
   counts or analytics screenshots - which are common in that market. Loud is a style; dishonest
   is a defect.
+
+## 1.3.0 - 2026-10-27
+
+Course-correction release. The skill had started growing templates shaped around whatever the
+last example happened to be, and its artwork was drawn in CSS - which is exactly why output
+read as synthetic.
+
+### Added
+- **`scripts/fetch_stock.py`** - real CC0 / public-domain photography from Openverse, no API
+  key. Writes `ATTRIBUTION.md` for every download, defaults to licences that need no credit,
+  and warns that open licensing is not a model, property or trademark release.
+- **`assets/templates/showcase.html`** - one niche-agnostic layout replacing `service-device`
+  and `gig-video`. `DEVICE=browser|player|screen|none`; `screen` composites the user's OWN
+  image inside the rim-lit tilted frame. Works at any canvas size and auto-centres as a type
+  hero when no device is used.
+- Fiverr gig spec (1280x769, min 712x430, max 4000x2416) in `platform-specs.md`, a `fiverr`
+  preset in `resize.py`, and its ratio in `thumb_test.py` - without that entry a correct gig
+  image was reported as "not a clean platform ratio".
+
+### Changed
+- `SKILL.md` now states the skill is niche- and platform-agnostic, and sets the imagery order
+  of preference: user's own asset, then real stock, then abstraction.
+- Removed `service-device.html` and `gig-video.html`; both were the same pattern shaped around
+  one example each. Use `showcase.html`.
+
+### Fixed
+- **`render_html.py` silently turned ordinary words into file:// URLs.** Any `--var` value
+  matching an existing file or folder was rewritten as a path, and on Windows the match is
+  case-insensitive - so a headline word like WORK beside a `work/` directory rendered as
+  `file:///C:/.../work` inside the thumbnail. Conversion now requires an asset extension.

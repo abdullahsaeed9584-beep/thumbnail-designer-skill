@@ -1,0 +1,265 @@
+<!doctype html>
+<!-- SHOWCASE - hook left, device right. Niche-agnostic and platform-agnostic.
+     Works for any offer, product, service, course, channel or portfolio piece, at any
+     canvas size (--size 1280x720, 1280x769, 1200x630, 1080x1350 ...).
+
+     DEVICE=browser  abstract site wireframe      (web, SaaS, design, agency, portfolio)
+     DEVICE=player   video player + NLE timeline  (editing, film, podcast, course, motion)
+     DEVICE=screen   YOUR OWN image inside the frame -- pass --var SCREEN="work/shot.png"
+     DEVICE=none     type-hero; the words carry it
+
+     render_html.py showcase.html out.png --size 1280x720 \
+       --var KICKER="..." --var HEADLINE="..." --var KEYWORD="..." \
+       --var CHIPS="one - two - three" --var DEVICE=screen --var SCREEN="work/shot.png" \
+       --var ACCENT="#FFC43D"
+
+     The built-in device art is ABSTRACT on purpose: never a screenshot of someone else's
+     work and never an invented metric. Use DEVICE=screen to show real work you own. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Showcase thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root {
+    --accent: {{ACCENT}};
+    --base: #05070C;
+    --support: #0D1726;
+    --vignette: 0.66;
+  }
+
+  .ambient {                 /* two-source wash: accent key, cool fill */
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(62% 58% at 76% 34%, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 66%),
+      radial-gradient(58% 60% at 14% 76%, rgba(22, 120, 170, 0.30) 0%, transparent 68%),
+      linear-gradient(152deg, var(--base) 0%, var(--support) 58%, var(--base) 100%);
+  }
+  .keylight { opacity: 0.55; }
+
+  /* ----------------------------------------------------------- left column */
+  .col {
+    position: absolute; left: 4.5%; top: 0; bottom: 0; width: 44%; z-index: 6;
+    display: flex; flex-direction: column; justify-content: center; gap: 26px;
+  }
+  .solo .col { left: 6%; right: 6%; width: auto; align-items: center; text-align: center; }
+
+  .kicker {
+    position: static;
+    font-family: var(--support-font); font-weight: 800; font-size: 26px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+    text-shadow: 0 2px 14px rgba(0,0,0,0.95);
+  }
+  .kicker::after {
+    content: ""; display: block; width: 68px; height: 5px; margin-top: 15px;
+    background: var(--accent); border-radius: 3px;
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 85%, transparent);
+  }
+  .solo .kicker::after { margin-left: auto; margin-right: auto; }
+
+  .headline { position: static; font-size: 128px; }
+  .headline .keyword { font-size: 0.58em; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; }
+  .solo .chips { justify-content: center; }
+  .chip {
+    font-family: var(--support-font); font-weight: 800; font-size: 20px;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 9px 15px 10px; border-radius: 7px;
+    color: color-mix(in srgb, var(--ink) 92%, transparent);
+    background: rgba(255,255,255,0.07);
+    border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  }
+
+  /* --------------------------------------------------------- device, right */
+  .scene { position: absolute; right: 3.5%; top: 50%; z-index: 4; perspective: 1700px; transform: translateY(-50%); }
+  .rig { width: 588px; transform: rotateY(-12deg) rotateX(3deg); }
+
+  .frame {
+    position: relative; border-radius: 14px; overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+    box-shadow:
+      -10px 0 0 -5px color-mix(in srgb, var(--accent) 62%, transparent),   /* rim light */
+      -2px 0 26px color-mix(in srgb, var(--accent) 30%, transparent),
+      34px 40px 52px rgba(0,0,0,0.76),                                     /* cast shadow */
+      10px 14px 16px rgba(0,0,0,0.82);                                     /* contact shadow */
+  }
+
+  /* --- player --- */
+  .frame--player { height: 330px;
+    background:
+      radial-gradient(54% 64% at 50% 44%, rgba(255,190,110,0.40) 0%, transparent 60%),
+      linear-gradient(178deg, #0A2235 0%, #14455A 38%, #2A3B3F 62%, #120B08 100%); }
+  .bar-t, .bar-b { position: absolute; left: 0; right: 0; height: 34px; background: #05070C; }
+  .bar-t { top: 0; } .bar-b { bottom: 0; }
+  .sun { position: absolute; left: 50%; top: 42%; width: 120px; height: 120px; margin-left: -60px;
+    border-radius: 50%; filter: blur(16px);
+    background: radial-gradient(circle, rgba(255,214,150,0.85) 0%, rgba(255,170,80,0.28) 45%, transparent 70%); }
+  .haze { position: absolute; left: 0; right: 0; bottom: 34px; height: 36%;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,186,110,0.14) 55%, rgba(10,14,20,0.6) 100%); }
+  .ridge { position: absolute; left: -4%; right: -4%; bottom: 34px; height: 46%; }
+  .ridge span { position: absolute; bottom: 0; filter: blur(0.7px); }   /* atmospheric perspective */
+  .ridge .r1 { left: -6%;  width: 56%; height: 52%; background: #16283A; opacity: .9;
+    clip-path: polygon(0 100%, 22% 24%, 42% 62%, 66% 10%, 100% 100%); }
+  .ridge .r2 { right: -8%; width: 62%; height: 74%; background: #05080E;
+    clip-path: polygon(0 100%, 26% 16%, 54% 56%, 78% 22%, 100% 100%); }
+  .play { position: absolute; left: 50%; top: 50%; width: 92px; height: 92px; margin: -46px 0 0 -46px;
+    border-radius: 50%; background: rgba(255,255,255,0.14); border: 3px solid rgba(255,255,255,0.78);
+    display: flex; align-items: center; justify-content: center; }
+  .play::after { content: ""; margin-left: 7px; width: 0; height: 0;
+    border-top: 17px solid transparent; border-bottom: 17px solid transparent; border-left: 28px solid #FFF; }
+  .scrub { position: absolute; left: 18px; right: 18px; bottom: 46px; height: 4px; border-radius: 3px; background: rgba(255,255,255,0.22); }
+  .scrub::after { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 62%;
+    border-radius: 3px; background: color-mix(in srgb, var(--accent) 72%, transparent); }
+
+  /* --- browser --- */
+  .frame--browser { background: #0C1524; }
+  .chrome { display: flex; align-items: center; gap: 9px; padding: 15px 18px;
+    background: #16233A; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .dot { width: 13px; height: 13px; border-radius: 50%; }
+  .dot:nth-child(1){background:#FF5F57} .dot:nth-child(2){background:#FEBC2E} .dot:nth-child(3){background:#28C840}
+  .addr { flex: 1; height: 19px; margin-left: 14px; border-radius: 10px; background: rgba(255,255,255,0.08); }
+  .view { padding: 26px 28px 32px; }
+  .hero-block { height: 112px; border-radius: 10px; margin-bottom: 20px;
+    background: linear-gradient(115deg, color-mix(in srgb, var(--accent) 52%, transparent) 0%,
+                                        color-mix(in srgb, var(--accent) 12%, transparent) 70%); }
+  .line { height: 15px; border-radius: 8px; background: rgba(255,255,255,0.17); margin-bottom: 12px; }
+  .line.w70{width:70%} .line.w45{width:45%}
+  .cards { display: flex; gap: 14px; margin-top: 22px; }
+  .card { flex: 1; height: 82px; border-radius: 10px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.07); }
+  .card:nth-child(2) { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+
+  /* --- your own screen --- */
+  .frame--screen img { display: block; width: 100%; height: auto; }
+
+  /* --- timeline (player only) --- */
+  .timeline { margin-top: 14px; height: 92px; border-radius: 12px; padding: 11px;
+    background: #0B1220; border: 1px solid rgba(255,255,255,0.09); box-shadow: 22px 28px 40px rgba(0,0,0,0.6); }
+  .track { display: flex; gap: 5px; height: 34px; }
+  .clip { border-radius: 4px; }
+  .audio { position: relative; display: flex; align-items: center; gap: 2px; height: 30px;
+    margin-top: 8px; padding: 0 2px; border-radius: 4px; background: rgba(255,255,255,0.05); }
+  .wave { width: 3px; border-radius: 2px; background: color-mix(in srgb, var(--accent) 72%, white 10%); }
+  .playhead { position: absolute; top: -42px; bottom: -2px; width: 2px; background: #FF4D4D;
+    box-shadow: 0 0 10px rgba(255,77,77,0.9); }
+
+  .fg-bokeh.a { left: -70px; bottom: -70px; width: 240px; height: 240px; opacity: .40; }
+  .fg-bokeh.b { right: 60px; top: -60px; width: 180px; height: 180px; opacity: .30; }
+  .logo { left: 4.5%; bottom: 5%; height: 42px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="ambient"></div>
+  <div class="bg" style="background-image:url('{{BG}}')"></div>
+  <div class="keylight"></div>
+
+  <div class="scene" id="scene">
+    <div class="rig">
+      <div class="frame" id="frame"></div>
+      <div class="timeline" id="timeline">
+        <div class="track" id="track"></div>
+        <div class="audio" id="audio"><div class="playhead" style="left:62%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="kicker">{{KICKER}}</div>
+    <h1 class="headline">{{HEADLINE}}<br><span class="keyword">{{KEYWORD}}</span></h1>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <img class="logo" src="{{LOGO}}" alt="" onerror="this.remove()">
+  <div class="fg-bokeh a"></div>
+  <div class="fg-bokeh b"></div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  var SCREEN = "{{SCREEN}}".trim();
+  var device = ("{{DEVICE}}" || (SCREEN ? "screen" : "none")).trim().toLowerCase();
+  if (device === "screen" && !SCREEN) device = "none";
+
+  var stage = document.querySelector('.stage');
+  var frame = document.getElementById('frame');
+  var timeline = document.getElementById('timeline');
+
+  if (device === "player") {
+    frame.className = 'frame frame--player';
+    frame.innerHTML =
+      '<div class="sun"></div><div class="haze"></div>' +
+      '<div class="ridge"><span class="r1"></span><span class="r2"></span></div>' +
+      '<div class="bar-t"></div><div class="bar-b"></div>' +
+      '<div class="play"></div><div class="scrub"></div>';
+  } else if (device === "browser") {
+    frame.className = 'frame frame--browser';
+    frame.innerHTML =
+      '<div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span>' +
+      '<span class="addr"></span></div>' +
+      '<div class="view"><div class="hero-block"></div><div class="line w70"></div>' +
+      '<div class="line w45"></div><div class="cards"><div class="card"></div>' +
+      '<div class="card"></div><div class="card"></div></div></div>';
+    timeline.remove();
+  } else if (device === "screen") {
+    frame.className = 'frame frame--screen';
+    frame.innerHTML = '<img src="' + SCREEN + '" alt="">';
+    timeline.remove();
+  } else {
+    document.getElementById('scene').remove();
+    stage.classList.add('solo');          // type becomes the subject, centred
+  }
+
+  if (device === "player") {              // generic NLE strip, deterministic
+    var widths = [22, 13, 19, 9, 16, 21];
+    var hues = ['#2E6F8E', '#C9892F', '#2E6F8E', '#8E4A2E', '#3F8E6F', '#C9892F'];
+    var track = document.getElementById('track');
+    widths.forEach(function (w, i) {
+      var c = document.createElement('div');
+      c.className = 'clip'; c.style.flex = w + ' 1 0';
+      c.style.background = 'linear-gradient(180deg, ' + hues[i] + ' 0%, rgba(0,0,0,0.42) 100%)';
+      track.appendChild(c);
+    });
+    var audio = document.getElementById('audio'), seed = 7;
+    for (var i = 0; i < 92; i++) {
+      seed = (seed * 1103515245 + 12345) % 2147483648;    // LCG so renders are reproducible
+      var b = document.createElement('div');
+      b.className = 'wave';
+      b.style.height = (6 + (seed % 1000) / 1000 * 20).toFixed(1) + 'px';
+      audio.appendChild(b);
+    }
+  }
+
+  var chipText = "{{CHIPS}}".split(/\s*[-|]\s*/).filter(function (s) { return s.trim(); });
+  var chips = document.getElementById('chips');
+  chipText.forEach(function (s) {
+    var c = document.createElement('div');
+    c.className = 'chip'; c.textContent = s.trim();
+    chips.appendChild(c);
+  });
+  if (!chipText.length) chips.remove();
+
+  document.querySelectorAll('.kicker,.headline .keyword').forEach(function (el) {
+    if (!el.textContent.trim()) el.remove();
+  });
+  document.querySelectorAll('.bg').forEach(function (el) {
+    if (/url\(['"]?['"]?\)/.test(el.getAttribute('style') || '')) el.remove();
+  });
+
+  // Fit the headline to its column, whichever layout is active.
+  var h = document.querySelector('.headline');
+  if (h) {
+    var col = document.querySelector('.col');
+    var maxW = col.clientWidth;
+    var maxH = stage.clientHeight * 0.46;
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    var fits = function () { return h.scrollHeight <= maxH && h.scrollWidth <= maxW; };
+    while (size < 210 && fits()) { size += 4; h.style.fontSize = size + 'px'; }
+    while (size > 54 && !fits()) { size -= 4; h.style.fontSize = size + 'px'; }
+  }
+</script>
+</body>
+</html>

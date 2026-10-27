@@ -7,9 +7,9 @@ batch-produces premium thumbnails — and proves the result before shipping it.*
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-0B0E14?style=flat-square)](LICENSE)
 ![Skill](https://img.shields.io/badge/type-agent%20skill-2563EB?style=flat-square)
-![Templates](https://img.shields.io/badge/templates-9-16A34A?style=flat-square)
-![Scripts](https://img.shields.io/badge/scripts-8-0891B2?style=flat-square)
-![Platforms](https://img.shields.io/badge/platforms-12-F2A20C?style=flat-square)
+![Templates](https://img.shields.io/badge/templates-8-16A34A?style=flat-square)
+![Scripts](https://img.shields.io/badge/scripts-9-0891B2?style=flat-square)
+![Platforms](https://img.shields.io/badge/platforms-13-F2A20C?style=flat-square)
 
 </div>
 
@@ -119,7 +119,7 @@ pasted on.
 
 ## Why this one is different
 
-**It renders.** Nine production HTML/CSS layouts plus a Python compositing pipeline —
+**It renders.** Eight production HTML/CSS layouts plus a Python compositing pipeline —
 background depth, contact shadow, rim light, colour match, gradient type, grain finish. Most
 thumbnail "skills" only produce a brief.
 
@@ -167,7 +167,7 @@ skills/thumbnail-designer/
 │   ├── resize.py             focal-aware multi-platform re-crop
 │   └── fetch_fonts.py        licence-safe Google Fonts
 ├── assets/
-│   ├── templates/            9 production layouts + base.css + impact.css
+│   ├── templates/            8 production layouts + base.css + impact.css
 │   ├── brand-kits/           per-client style systems
 │   └── fonts/                OFL fonts land here
 └── evals/test-prompts.md     25 regression prompts
@@ -208,10 +208,20 @@ python scripts/thumb_test.py out/final.jpg --competitors comp1.jpg comp2.jpg
 | `comparison.html` | real before/after or A vs B, diagonal split, warm vs cool | 1280×720 |
 | `urdu-rtl.html` | Urdu/Nastaliq, mirrored Z-pattern, descender room | 1280×720 |
 | `vertical-cover.html` | Shorts / Reels / TikTok | 1080×1920 |
-| `service-device.html` | agency/service offer: hook left, tilted device right | 1280×720 |
+| `showcase.html` | any offer/product/service: hook left, device right — `DEVICE=browser/player/screen/none` | any |
 | `text-layer.html` | headline only, transparent — for the compositing route | 1280×720 |
 
 ---
+
+## Real imagery, not drawn shapes
+
+Code-drawn scenery is the fastest way to look AI-made. The skill's order of preference is:
+**your own photo or screenshot** → `scripts/fetch_stock.py` (real CC0 photography from
+Openverse, no API key) → abstract geometry, and only when abstraction is the point.
+
+`showcase.html --var DEVICE=screen --var SCREEN="my-shot.png"` drops your own image inside the
+rim-lit, tilted device frame — for a video-editing gig that means your actual timeline, which
+beats any stock photo because it is specific, real and yours.
 
 ## Non-negotiables
 

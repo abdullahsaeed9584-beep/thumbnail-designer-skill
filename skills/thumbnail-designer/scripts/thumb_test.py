@@ -27,6 +27,9 @@ SPEC = {
     "9:16": (1080, 1920, None),
     "4:5": (1080, 1350, None),
     "1:1": (3000, 3000, None),
+    # Fiverr gig images are 1280x769, not 16:9 - without this entry a correct
+    # gig image is reported as "not a clean platform ratio".
+    "1280:769": (1280, 769, None),
 }
 
 

@@ -55,9 +55,21 @@ def have_playwright():
         return False
 
 
+ASSET_EXT = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".avif",
+             ".ttf", ".otf", ".woff", ".woff2"}
+
+
 def as_url(v):
-    """Turn an existing local asset path into a file:// URL; leave anything else alone."""
+    """Turn a local ASSET path into a file:// URL; leave anything else alone.
+
+    The extension check is load-bearing. Without it any value that happens to match a
+    file or folder name gets rewritten - and on Windows the match is case-insensitive,
+    so a headline word like "WORK" next to a work/ directory silently renders as
+    file:///C:/.../work inside the thumbnail.
+    """
     if not v or "://" in v or v.startswith("#") or v.startswith("data:"):
+        return v
+    if Path(v).suffix.lower() not in ASSET_EXT:
         return v
     p = Path(v)
     return p.resolve().as_uri() if p.exists() else v

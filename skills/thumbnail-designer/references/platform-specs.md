@@ -13,6 +13,7 @@ Platforms change - verify current values if a job depends on an exact number.
 | LinkedIn post/link | 1200x627 | 1.91:1 | `linkedin` | Clean, text-light, professional |
 | X / Twitter post | 1200x675 | 16:9 | `x_post` | Timeline crops tall images |
 | Blog / OG image | 1200x630 | 1.91:1 | `og` | Title must read in a small link preview |
+| Fiverr gig image | 1280x769 (min 712x430, max 4000x2416) | ~1.665:1 | `fiverr` | Fiverr's own recommendation, 72 DPI, landscape. Up to 3 images per gig. NOT 16:9 - a 1280x720 export gets letterboxed or cropped |
 | Podcast cover | 3000x3000 (min 1400) | 1:1 | `podcast` | Must read at 150x150 |
 | Course cover | 1280x720 or 1920x1080 | 16:9 | `yt` / `yt_hd` | Follow the host platform's own rule |
 
@@ -21,6 +22,7 @@ Platforms change - verify current values if a job depends on an exact number.
 - YouTube: keep the bottom-right 12% w x 12% h clear (duration badge).
 - Vertical: nothing important in the top 10%, bottom 20%, or right 15%.
 - Square/podcast: assume a centre crop and small display.
+- Fiverr: the search grid shows the image around 300px wide with the seller block beneath it, so keep type large but don't fear a support line the way a 168px YouTube thumbnail must.
 Check visually: `python scripts/safe_zone_overlay.py out.jpg --platform yt|vertical|square`.
 
 ## Multi-platform resize

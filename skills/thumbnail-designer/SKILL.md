@@ -10,6 +10,16 @@ Act as senior art director + careful photo editor. Make professional decisions y
 
 The quality bar is `references/premium-standard.md` — read it on every build. A thumbnail that merely "has a subject and text" is a fail.
 
+**This skill is niche-agnostic and platform-agnostic.** It is not tuned for one topic, one
+market or one look: any subject, any of the 13 platform specs, any of the 3 style registers.
+If a request seems to need a bespoke template, generalise an existing one instead of adding a
+niche-shaped file.
+
+**Prefer real imagery over drawn shapes.** Code-drawn scenery reads as synthetic, which is the
+single fastest way to look AI-made. Order of preference: the user's own photo or screenshot →
+`scripts/fetch_stock.py` (real CC0 photography) → abstract geometry, and only when abstraction
+is the actual intent.
+
 ## Workflow (every build)
 1. **Classify** inputs + intent (routing table below). Cases combine; don't treat them as exclusive.
 2. **Detect tools** → `references/tools-fallback.md`. Tier 1 code render, Tier 2 Canva connector, Tier 3 brief only. Use the highest available. Never claim an edit you did not execute.

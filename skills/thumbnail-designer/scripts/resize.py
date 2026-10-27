@@ -20,6 +20,7 @@ PRESETS = {  # name: (w, h, max_bytes or None)
     "linkedin": (1200, 627, None),
     "x_post": (1200, 675, None),
     "og": (1200, 630, None),
+    "fiverr": (1280, 769, None),
     "podcast": (3000, 3000, None),
 }
 ALL = "yt,vertical,ig_feed,fb_link,linkedin,og"
