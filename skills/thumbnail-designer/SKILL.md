@@ -1,83 +1,96 @@
 ---
 name: thumbnail-designer
-description: Design, critique, A/B test, resize and batch-produce premium thumbnails and cover images (YouTube, Shorts, Reels, TikTok, Facebook, LinkedIn, podcast, blog/OG). Handles topic-only briefs, video titles, personal photos with strict face/hair identity preservation, reference thumbnails, brand kits and logos, Urdu/RTL headlines, background replacement, cinematic grading, rim light and depth, typography, safe zones and CTR-focused critique. Use whenever the user mentions thumbnail, thumb, cover image, YT thumbnail, banner for a video, CTR, "make it like this thumbnail", thumbnail ideas, or wants a person's photo placed into a designed cover, even if they don't say "thumbnail" explicitly.
+description: Premium graphic design — thumbnails, covers, social posts, ads, banners and posters. Designs, renders, critiques, A/B tests, resizes and batch-produces for YouTube, Shorts, Reels, TikTok, Instagram, Facebook, LinkedIn, X, podcast, OG, Fiverr and print. Handles topic-only briefs, video titles, personal photos under strict face/hair identity preservation, reference images, brand kits, Urdu/RTL headlines, real stock photography, motivated-light glow, cinematic grading, typography, safe zones and CTR critique. Use whenever the user mentions thumbnail, cover image, banner, poster, ad creative, gig image, CTR, "make it like this", design ideas, or wants a photo placed into a designed layout — even if they don't say "thumbnail".
 license: MIT
 ---
 
 # Thumbnail Designer
 
-Act as senior art director + careful photo editor. Make professional decisions yourself; ask at most ONE question, and only if the answer changes the result materially.
+Senior art director plus careful photo editor. Decide like a professional; ask at most ONE
+question, and only when the answer changes the result materially.
 
-The quality bar is `references/premium-standard.md` — read it on every build. A thumbnail that merely "has a subject and text" is a fail.
+**This is a graphic-design skill, not a thumbnail-only one.** Same craft for covers, social
+posts, ads, banners, posters and slide art — only the canvas and safe zones change.
+**It is niche-agnostic.** If a brief seems to need a bespoke template, generalise an existing
+one rather than adding a niche-shaped file.
 
-**This is a graphic-design skill, not only a thumbnail skill.** The same craft - composition,
-type, light, grade, proof - applies to covers, social posts, ads, banners, posters, slide art
-and album/book covers. Pick the canvas from `platform-specs.md`, then design. Nothing below is
-thumbnail-only except the YouTube-specific safe zones.
+## Workflow
 
-**This skill is niche-agnostic and platform-agnostic.** It is not tuned for one topic, one
-market or one look: any subject, any of the 13 platform specs, any of the 3 style registers.
-If a request seems to need a bespoke template, generalise an existing one instead of adding a
-niche-shaped file.
-
-**Prefer real imagery over drawn shapes.** Code-drawn scenery reads as synthetic, which is the
-single fastest way to look AI-made. Order of preference: the user's own photo or screenshot →
-`scripts/fetch_stock.py` (real CC0 photography) → abstract geometry, and only when abstraction
-is the actual intent.
-
-## Workflow (every build)
-1. **Classify** inputs + intent (routing table below). Cases combine; don't treat them as exclusive.
-2. **Detect tools** → `references/tools-fallback.md`. Tier 1 code render, Tier 2 Canva connector, Tier 3 brief only. Use the highest available. Never claim an edit you did not execute.
-3. **Platform** → `references/platform-specs.md` (size, safe zones, file limit).
-4. **Register, then concept.** Pick the style register first (`references/style-registers.md`): **A Creator High-Impact** (loud feed, creators, gigs, gaming - the default for a general YouTube ask), **B Cinematic Editorial**, **C Clean Corporate**. Commit to one; never mix. Then: ONE idea, ONE focal point, ONE hook. Headline 2-5 words from `references/hooks.md`; layout + type from `references/composition-type.md`.
-5. **Build in layer order** → `references/render-pipeline.md`:
-   background → depth (blur/vignette) → subject cutout → contact shadow → rim light → colour match → headline → graphic cues → foreground depth → finish pass.
-6. **Prove it** (not optional):
-   - `python scripts/thumb_test.py out.jpg` → mobile 168px, grayscale, squint, feed mock
+1. **Classify** the inputs and intent (routing table below). Cases combine.
+2. **Detect tier** → `references/tools-fallback.md`. Tier 1 code render, Tier 2 Canva, Tier 3
+   brief only. Use the highest available. Never claim an edit you did not execute.
+3. **Canvas** → `references/platform-specs.md` for size, safe zones and file limit.
+4. **Register, then concept** → `references/style-registers.md`. Pick ONE of:
+   **A Creator High-Impact** (loud feed, gigs, gaming) · **B Cinematic Editorial** ·
+   **C Clean Corporate** · **D Premium Insight** (the expensive analytical look).
+   Commit to it; mixing registers is what reads as amateur. Then: one idea, one focal point,
+   one hook. Headline 2–5 words from `references/hooks.md`.
+5. **Source real imagery.** Order of preference: the user's own photo or screenshot →
+   `scripts/fetch_stock.py` (real CC0 photography) → abstract geometry, and only when
+   abstraction is genuinely the intent. **Code-drawn scenery is the fastest way to look
+   AI-made.** A gradient is not a place.
+6. **Build in layer order** → `references/render-pipeline.md`:
+   background → depth → subject → contact shadow → rim/motivated light → colour match →
+   headline → cues → foreground depth → finish.
+7. **Prove it** (not optional):
+   - `python scripts/thumb_test.py out.jpg` — mobile 168px, grayscale, squint, feed mock
    - `python scripts/contrast_check.py --image out.jpg --box <x,y,w,h> --fg "#FFF"`
    - `python scripts/safe_zone_overlay.py out.jpg`
-   - **View those images yourself.** Then score with `references/scorecard.md`. Below 32/40 or any zero → fix and re-test before delivering.
-7. **Deliver**: save to the output dir (`/mnt/user-data/outputs/` on Claude.ai), present the file(s). Note: tier used, assumptions, limitations. Nothing else.
+   - **Open those images and look.** Then score with `references/scorecard.md`.
+     Below 32/40, or any axis at 0 → fix and re-test before delivering.
+8. **Deliver**: save, present, and note the tier used, assumptions and limitations.
 
 ## Routing
+
 | Input / intent | Read |
 |---|---|
-| Any build at all | `references/style-registers.md` → `references/premium-standard.md` + `references/render-pipeline.md` |
-| Loud / creator / gig / gaming style, or "make it pop" | `references/style-registers.md` §A + `assets/templates/creator-impact.html` |
-| Premium / expensive / "like these references" / insight or analysis | `references/glow-and-light.md` + `assets/templates/insight.html` |
-| Any glow, neon, light source, "make it glow" | `references/glow-and-light.md` (motivated light - never a decorative halo) |
-| Any personal photo (face/hair) | `references/identity-protocol.md` (MANDATORY) |
-| Topic only / title only | `references/cases.md` §A-B, `references/niche-guide.md`, `references/hooks.md` |
-| Reference thumbnail (+photo) | `references/cases.md` §D-E |
+| Any build | `references/style-registers.md` → `references/premium-standard.md` + `references/render-pipeline.md` |
+| Premium / expensive / "like these references" / insight, analysis | `references/glow-and-light.md` + `assets/templates/scene.html` |
+| Any glow, neon, light source, "make it glow" | `references/glow-and-light.md` — motivated light, never a decorative halo |
+| Loud / creator / gig / gaming, "make it pop" | `references/style-registers.md` §A + `assets/templates/creator-impact.html` |
+| A real photo of a person | `assets/templates/photo-split.html` or `scene.html` (no cut-out needed) |
+| Any personal photo (face/hair) | `references/identity-protocol.md` — MANDATORY |
+| Topic only / video title | `references/cases.md` §A–B, `references/niche-guide.md`, `references/hooks.md` |
+| Reference image supplied (+ photo) | `references/cases.md` §D–E |
 | Logo / brand kit | `references/cases.md` §G + `assets/brand-kits/<client>.md` |
-| Sketch / layout | `references/cases.md` §H |
-| Improve / specific edit | `references/cases.md` §I-J (minimal change) |
-| Batch, A/B variants | `references/cases.md` §L, §M |
+| Improve / one specific edit | `references/cases.md` §I–J — minimal change |
+| Batch, A/B variants | `references/cases.md` §L, §M (YouTube Test & Compare) |
 | Critique / audit | `references/cases.md` §N + `references/scorecard.md` |
 | Multi-platform resize | `references/platform-specs.md` + `scripts/resize.py` |
-| Retouch, grade, cutout, light | `references/retouch-color.md` |
-| Type, layout, effects, hierarchy | `references/composition-type.md` |
-| Headline wording / hooks | `references/hooks.md` |
-| Urdu / RTL text | `references/composition-type.md` §Urdu |
-| Ideas only (no build) | `references/cases.md` §K |
+| Retouch, grade, cutout, lighting | `references/retouch-color.md` |
+| Type, layout, hierarchy, effects | `references/composition-type.md` |
+| Urdu / RTL | `references/composition-type.md` §Urdu + `assets/templates/urdu-rtl.html` |
+| Ideas only, no build | `references/cases.md` §K |
 
-## Hard rules (always)
-- **Identity first.** Use original subject pixels. No face swap, face regeneration, reshaping, generative inpaint/outpaint over face or hair, plastic smoothing. If cutout quality can't protect hair strands, say so and offer a safer option. Details: identity-protocol.
-- **Honesty.** No fabricated stats, quotes, prices, charts-as-real-data, fake screenshots, fake links. No false depiction of real people. No clickbait the video doesn't pay off.
-- **Text exact.** Preserve the user's wording; verify spelling and numbers on the rendered image.
-- **Effects need a purpose** (separation, hierarchy, story, readability, realism). Otherwise omit.
-- **Brand assets untouched:** no stretching, recolouring or inventing logos. Licence-safe fonts only (Google Fonts via `scripts/fetch_fonts.py`).
-- **Minimal change** when the user asks for one edit: touch only that.
-- **Original kept:** never overwrite the source; work on copies in `work/`.
-- **Language:** reply in the user's language (Roman Urdu stays Roman Urdu). Headline language = audience language unless told.
-- **Defaults:** YouTube 1280×720, sRGB, JPG q≈90 ≤2 MB (PNG only if text sharpness needs it and it stays under the limit).
-- **The final file must be opened and looked at** before delivery. Failing QA is not deliverable.
+## Hard rules
+
+- **Identity first.** Use the subject's original pixels. No face swap, regeneration, reshaping,
+  generative inpainting over face or hair, or plastic smoothing. If a cutout cannot protect hair
+  detail, say so and offer a safer route.
+- **A licence is not a model release.** Never put a stranger's face on a commercial offer.
+- **Honesty.** No fabricated stats, quotes, prices, metrics, charts-as-real-data, fake
+  screenshots or false endorsement. No clickbait the content does not pay off.
+- **Text exact.** Keep the user's wording; verify spelling and numbers on the rendered pixels.
+- **Effects need a purpose** — separation, hierarchy, story, readability, realism. Else omit.
+- **Density.** If a large area of the frame carries nothing, the design is not finished.
+- **Brand assets untouched.** No stretching, recolouring or inventing logos. Licence-safe fonts.
+- **Minimal change** when one edit is asked for. **Never overwrite the original.**
+- **Language:** reply in the user's language; Roman Urdu stays Roman Urdu.
+- **Defaults:** 1280×720, sRGB, JPG q≈90 under the platform limit.
+- **Look at the final file** before delivering. Failing QA is not deliverable.
 
 ## Ambiguity
-Proceed on the best professional guess and state the assumption in one line. Ask only when: two photos with unclear roles, no topic and no context, or exact factual wording is at stake.
+
+Proceed on the best professional guess and state the assumption in one line. Ask only when two
+photos have unclear roles, there is no topic and no context, or exact factual wording is at stake.
 
 ## Output naming
-`<project>_<platform>_<concept>_v<N>.jpg` — e.g. `wealthtalk_yt_cinematic_v1.jpg`. Variants: `_A`, `_B`, `_C`.
 
-## Skill maintenance
-A bad output means a missing rule. Add it to the matching `references/` file, not here — keep this file under ~150 lines. Re-run `evals/test-prompts.md` after any edit. New client → new file in `assets/brand-kits/`.
+`<project>_<platform>_<concept>_v<N>.jpg` — e.g. `wealthtalk_yt_cinematic_v1.jpg`.
+Variants: `_A`, `_B`, `_C`.
+
+## Maintenance
+
+A bad output means a missing rule. Add it to the matching `references/` file, not here — keep
+this file under ~150 lines. Re-run `evals/test-prompts.md` after any edit. New client → a new
+file in `assets/brand-kits/`.

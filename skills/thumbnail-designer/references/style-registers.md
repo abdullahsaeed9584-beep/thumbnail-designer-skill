@@ -93,14 +93,14 @@ Full doctrine and build order: `glow-and-light.md`.  Templates: `insight.html`, 
 Dark base, one restrained accent, blurred photographic or gradient background, rim light keyed
 to the key light, contact shadow, 15-30% depth-of-field, silver or gold gradient type with a
 soft dark glow instead of a hard stroke, 2-3% grain. Negative space is the point.
-Templates: `person-led.html`, `text-hero.html`, `service-device.html`.
+Templates: `person-led.html`, `text-hero.html`, `photo-split.html`, `showcase.html`.
 Full detail: `premium-standard.md`.
 
 ## C. Clean Corporate — the recipe
 Light or single-colour ground, generous margins, one photograph or device, no texture, no glow,
 type in a single weight pair with one accent colour, flat geometric shapes for structure, and a
 logo given real clearance. Legibility and trust over drama.
-Templates: `product-led.html`, `comparison.html`, `service-device.html` with a light `--base`.
+Templates: `product-led.html`, `comparison.html`, `showcase.html` with a light `--base`.
 
 ---
 

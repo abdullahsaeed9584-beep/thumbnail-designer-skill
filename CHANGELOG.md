@@ -213,3 +213,26 @@ large field of black. Technically compliant with its own doctrine, and visually 
 - The subject edge was being hidden under an overlaid dark band rather than blended; the photo
   now feathers its own edge with `mask-image`.
 - `MONO` defaulted near 1.0, draining the picture. The useful range in a scene is 0.2-0.4.
+
+## 1.7.1 - 2026-10-28
+
+Audit and packaging pass.
+
+### Changed
+- **`SKILL.md` rewritten** as a proper entry point: workflow in 8 numbered steps with the
+  register choice and real-imagery sourcing promoted into the flow, a routing table that leads
+  with the premium and glow paths, and the hard rules tightened. 96 lines, every path verified
+  to resolve.
+
+### Fixed
+- Two dead references to `service-device.html` in `style-registers.md`, left behind when that
+  template was folded into `showcase.html`.
+- README claimed 11 templates; there are 12.
+
+### Verified
+- All 9 scripts compile and their CLIs load.
+- Every `references/`, `scripts/`, `assets/` and `evals/` path cited in `SKILL.md` exists.
+- Every cross-reference between files in `references/` resolves.
+- Every template referenced in the docs is present, and every present template is documented.
+- Every README image link resolves.
+- Distributable is 1.71 MB.

@@ -7,7 +7,7 @@ batch-produces premium thumbnails — and proves the result before shipping it.*
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-0B0E14?style=flat-square)](LICENSE)
 ![Skill](https://img.shields.io/badge/type-agent%20skill-2563EB?style=flat-square)
-![Templates](https://img.shields.io/badge/templates-11-16A34A?style=flat-square)
+![Templates](https://img.shields.io/badge/templates-12-16A34A?style=flat-square)
 ![Scripts](https://img.shields.io/badge/scripts-9-0891B2?style=flat-square)
 ![Platforms](https://img.shields.io/badge/platforms-13-F2A20C?style=flat-square)
 
@@ -139,7 +139,7 @@ pasted on.
 
 ## Why this one is different
 
-**It renders.** Eleven production HTML/CSS layouts plus a Python compositing pipeline —
+**It renders.** Twelve production HTML/CSS layouts plus a Python compositing pipeline —
 background depth, contact shadow, rim light, colour match, gradient type, grain finish. Most
 thumbnail "skills" only produce a brief.
 
@@ -188,7 +188,7 @@ skills/thumbnail-designer/
 │   ├── resize.py             focal-aware multi-platform re-crop
 │   └── fetch_fonts.py        licence-safe Google Fonts
 ├── assets/
-│   ├── templates/           11 production layouts + base.css + impact.css
+│   ├── templates/           12 layouts + base/impact/premium stylesheets
 │   ├── brand-kits/           per-client style systems
 │   └── fonts/                OFL fonts land here
 └── evals/test-prompts.md     25 regression prompts
