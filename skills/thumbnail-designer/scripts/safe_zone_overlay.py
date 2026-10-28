@@ -8,7 +8,8 @@ from PIL import Image, ImageDraw
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("input")
-    ap.add_argument("--platform", default="yt", choices=["yt", "vertical", "square"])
+    ap.add_argument("--platform", default="yt",
+                    choices=["yt", "vertical", "square", "ytbanner"])
     ap.add_argument("--out")
     a = ap.parse_args()
     img = Image.open(a.input).convert("RGBA")
@@ -27,6 +28,22 @@ def main():
         d.rectangle([0, 0, W, H*0.10], fill=red)           # top UI
         d.rectangle([0, H*0.80, W, H], fill=red)           # caption/buttons
         d.rectangle([W*0.85, 0, W, H], fill=red)           # right action rail
+    elif a.platform == "ytbanner":
+        # A channel banner is uploaded at 2560x1440 but almost nobody ever sees that
+        # rectangle. Mobile shows the centre 1546x423; TV shows the whole 2560x1440;
+        # desktop shows roughly 2560x423. So everything that must be read - the name,
+        # the logo, the one line of copy - lives inside the centre 1546x423, and the
+        # rest is scenery that gets cropped away. The green box is that safe area.
+        sw, sh = 1546 / 2560, 423 / 1440
+        x0, y0 = W * (1 - sw) / 2, H * (1 - sh) / 2
+        x1, y1 = W * (1 + sw) / 2, H * (1 + sh) / 2
+        d.rectangle([0, 0, W, y0], fill=red)               # cropped on mobile
+        d.rectangle([0, y1, W, H], fill=red)
+        d.rectangle([0, y0, x0, y1], fill=red)
+        d.rectangle([x1, y0, W, y1], fill=red)
+        d.rectangle([x0, y0, x1, y1], outline=(0, 255, 120, 255), width=max(3, W // 500))
+        # desktop strip: full width, same height band
+        d.rectangle([0, y0, W, y1], outline=(255, 210, 0, 200), width=max(2, W // 900))
     out = a.out or a.input.rsplit(".", 1)[0] + "_safezone.png"
     Image.alpha_composite(img, ov).convert("RGB").save(out)
     print(out)

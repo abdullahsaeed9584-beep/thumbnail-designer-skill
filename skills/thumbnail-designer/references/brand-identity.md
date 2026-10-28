@@ -52,6 +52,15 @@ single highest-leverage decision in the file.
 **One path if you can.** Fewer elements means fewer things to go wrong in export, in
 embroidery digitising and in a sign-maker's cutter.
 
+**A knockout borrows the background, so ship a solid variant too.** The counter in a
+knockout mark is a hole, and a hole shows whatever is behind it. That is exactly right on
+paper and for one-colour work. It is wrong anywhere the background is not yours: on
+YouTube's light theme a knockout barbell reads white, and on dark theme the identical file
+reads black - one logo with two appearances, decided by the viewer's settings. Keep the
+knockout as the master, and export a **solid** variant with an opaque disc behind it for
+avatars, app icons, favicons and any placement over a photo. Same geometry, same path, one
+extra shape underneath - never a second copy to keep in sync.
+
 **No gradients, no shadows, no filters in the master.** They rasterise in print RIPs and
 in EPS export, and they are invisible at 16px. If the brand wants a gradient version,
 that is a *variant* built from the flat master, never the other way round.
@@ -103,6 +112,9 @@ for an extreme aspect ratio. Then it renders a contact sheet — **open it and l
 - [ ] **Knockout white** on dark still reads?
 - [ ] **Greyscale** holds its contrast?
 - [ ] Does it look like anyone else's? Say so if it does.
+- [ ] If it is a knockout, has it been checked on a **dark** background as well as light?
+      Mask it to a circle at 48px first if it is going to be an avatar - that is the size
+      and shape the platform actually renders.
 
 ---
 
@@ -112,7 +124,7 @@ A logo delivery is a set, not a file:
 
 1. `logo-lockup.svg` — horizontal, master
 2. `logo-stacked.svg` — for square and narrow spaces
-3. `logo-mark.svg` — the mark alone, for avatars and app icons
+3. `logo-mark.svg` — the mark alone, plus `logo-mark-solid.svg` for avatars and app icons
 4. One-colour black and white versions (or a documented filter, if the mark is a knockout)
 5. PNG exports at 64 / 256 / 1024 with transparency (`svg_check.py --png-out`)
 6. Colour values: HEX, and the RGB/CMYK caveat from `print-production.md`
