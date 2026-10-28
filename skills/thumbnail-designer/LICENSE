@@ -1,0 +1,36 @@
+Copyright (c) 2026 AbdullahCodes. All rights reserved.
+
+This software and its accompanying documentation, templates, scripts, prompts
+and reference material (the "Skill") are proprietary.
+
+PERMITTED
+  - Viewing and evaluating the source in this repository.
+  - Use of the Skill by a person or organisation holding a valid licence from
+    the copyright holder, including commercial use of images produced with it.
+  - Images you produce with the Skill are yours. This licence claims no
+    interest in your output.
+
+NOT PERMITTED without prior written permission from the copyright holder
+  - Copying, redistributing, publishing, sublicensing, selling, renting or
+    otherwise making the Skill or any substantial part of it available to
+    others, whether modified or unmodified, free or for a fee.
+  - Using the Skill, or any part of it, as the basis of a competing or
+    derivative product offered to third parties.
+  - Removing or altering this notice or the authorship attribution.
+
+Being publicly readable on GitHub does not place the Skill in the public
+domain and does not grant any of the rights withheld above. The absence of an
+open-source licence means all rights are reserved by default.
+
+Third-party material is governed by its own terms, not by this licence: fonts
+are fetched at setup under the SIL Open Font License, and stock photography is
+subject to the licence and model-release terms of the source it came from
+(see skills/thumbnail-designer/references/identity-protocol.md).
+
+THE SKILL IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SKILL OR ITS USE.
+
+For licensing enquiries, open an issue on the repository.
