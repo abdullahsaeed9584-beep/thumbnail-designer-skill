@@ -99,6 +99,30 @@ unlabelled is fine; realistic and fabricated is not. See `niche-guide.md`.
 
 ---
 
+## 7. Density - the mistake that makes all of the above look cheap
+
+Every rule above can be followed exactly and still produce something empty: one portrait, one
+glowing shape, and a large field of black. Austere is not premium.
+
+The expensive-looking references are **dense**. A real place behind the subject - a studio, a
+blackboard, a trading floor, a street. Real objects with real texture. A light source that is
+a *meaningful thing* (a candlestick chart, an equaliser, a screen), never a featureless bar.
+
+- **Put a real environment photograph behind everything.** A gradient is not a place. Blur it
+  8-12px and dim it to 0.7-0.85 - dim it further and the room becomes a smear, which defeats
+  the point.
+- **Keep colour.** Desaturate the subject 20-40%, not 95%. Pushing to full mono only works when
+  there is a strong scene and a vivid source to carry the frame; on a plain portrait it just
+  drains the picture.
+- **Give the source structure.** 16 candlesticks with wicks, 30 equaliser bars, a plotted line -
+  many elements, not one rectangle. Detail is what makes it read as an object rather than a UI
+  chrome element.
+- **Blend the subject with a mask**, feathering its own edge into the scene. An overlaid dark
+  band is not a blend; it is a dark band.
+- If a large area carries nothing, the design is not finished.
+
+Template: `scene.html`.
+
 ## Checklist for this look
 
 - [ ] Can I point at the thing emitting the light?
@@ -108,3 +132,6 @@ unlabelled is fine; realistic and fabricated is not. See `niche-guide.md`.
 - [ ] Is the headline mixed case, silver, soft-shadowed - and masked behind the subject?
 - [ ] Two annotation marks at most?
 - [ ] Is any data stylised rather than pretending to be a real screenshot?
+- [ ] Is there a real PLACE behind the subject, not a gradient?
+- [ ] Does the source have structure - many elements, not one shape?
+- [ ] Is any large area of the frame carrying nothing?

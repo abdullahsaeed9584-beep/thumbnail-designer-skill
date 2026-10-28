@@ -1,0 +1,201 @@
+<!doctype html>
+<!-- SCENE - the dense premium build. A real ENVIRONMENT photograph behind everything,
+     a detailed glowing data object as the light source, the subject composited over it,
+     and colour kept rather than crushed.
+
+     This exists because the austere version of the premium look - one portrait, one
+     glowing bar, a lot of empty black - is technically correct and visually empty. The
+     references that look expensive are DENSE: a real place, real objects, real depth.
+
+     render_html.py scene.html out.png --size 1280x720 \
+       --var BG="work/studio.jpg" --var PHOTO="work/me.jpg" \
+       --var HEADLINE="Why your mix" --var LIT="sounds thin" \
+       --var VIZ=eq --var SRC="#2EC4FF" --var PILL="It is not your plugins"
+
+     VIZ    candles | eq | line | none    the detailed object emitting the light
+     MONO   0-0.6 is the useful range here. 1.0 kills the scene - do not.
+     BG_BLUR / BG_DIM   how far the environment recedes (default 13px / 0.5)
+     SIDE   right (default) or left - which side the subject sits on -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scene thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="premium.css">
+<style>
+  :root { --src: {{SRC}}; --base: #060810; --vignette: 0.60; }
+
+  /* 1. the real place --------------------------------------------------- */
+  .env { position: absolute; inset: -4%; background-size: cover; background-position: center; }
+  .env-grade { position: absolute; inset: 0;
+    background: linear-gradient(120deg, rgba(6,8,16,0.72) 0%, rgba(6,8,16,0.12) 48%,
+                                        rgba(6,8,16,0.55) 100%); }
+
+  /* 2. the subject ------------------------------------------------------- */
+  .photo { position: absolute; top: 0; bottom: 0; right: 0; width: 46%;
+    background-size: cover; background-position: center;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 26%, #000 100%);
+            mask-image: linear-gradient(90deg, transparent 0%, #000 26%, #000 100%); }
+  .side-left .photo {
+    -webkit-mask-image: linear-gradient(270deg, transparent 0%, #000 26%, #000 100%);
+            mask-image: linear-gradient(270deg, transparent 0%, #000 26%, #000 100%); }
+  .side-left .photo { right: auto; left: 0; }
+  .photo-scrim { position: absolute; inset: 0; }
+
+  /* 3. the light source - a detailed object, not a featureless shape ------ */
+  .viz { position: absolute; z-index: 5; display: flex; align-items: flex-end; gap: 7px;
+    left: 34%; right: 34%; bottom: 9%; height: 30%; justify-content: center; }
+  .side-left .viz { left: 34%; right: 34%; }
+  .viz .candle { position: relative; width: 17px; border-radius: 3px; }
+  .viz .candle .wick { position: absolute; left: 50%; width: 2px; margin-left: -1px;
+    background: inherit; opacity: .85; }
+  .viz .bar { width: 13px; border-radius: 4px 4px 2px 2px; }
+  .viz--line { display: block; }
+
+  .up   { background: var(--src); box-shadow: 0 0 16px color-mix(in srgb, var(--src) 90%, transparent); }
+  .down { background: #FF4D6D; box-shadow: 0 0 16px rgba(255,77,109,0.85); }
+
+  /* 4. type --------------------------------------------------------------- */
+  .col { position: absolute; top: 0; bottom: 0; left: 4.5%; width: 44%; z-index: 7;
+    display: flex; flex-direction: column; justify-content: center; gap: 20px;
+    padding-bottom: 14%; }
+  .side-left .col { left: auto; right: 4.5%; align-items: flex-end; text-align: right; }
+  .headline--premium { font-size: 108px; line-height: 1.04; }
+  .pill { left: 5%; bottom: 10%; }
+  .side-left .pill { left: auto; right: 5%; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="env" id="env"></div>
+  <div class="env-grade"></div>
+
+  <div class="photo" id="photo"></div>
+  <div class="photo-scrim" id="pscrim"></div>
+
+  <div class="bloom" id="bloom"></div>
+  <div class="viz" id="viz"></div>
+  <div class="spill" id="spill"></div>
+
+  <div class="col"><h1 class="headline--premium" id="headline"></h1></div>
+  <div class="pill" id="pill"></div>
+
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  var stage = document.getElementById('stage');
+  var side = ("{{SIDE}}" || "right").trim().toLowerCase();
+  if (side === "left") stage.classList.add('side-left');
+
+  // ---- environment: a real place, pushed back but NOT erased ----
+  var bg = "{{BG}}".trim(), env = document.getElementById('env');
+  if (bg) {
+    env.style.backgroundImage = "url('" + bg + "')";
+    // Dim it too far and the "real place" becomes a smear - which is the whole
+    // reason this template exists. 0.7-0.85 keeps it readable as a room.
+    var bb = "{{BG_BLUR}}".trim() || "9";
+    var bd = "{{BG_DIM}}".trim() || "0.78";
+    env.style.filter = 'blur(' + bb + 'px) brightness(' + bd + ') saturate(1.05)';
+  } else { env.remove(); }
+
+  // ---- subject ----
+  var ph = "{{PHOTO}}".trim(), photo = document.getElementById('photo');
+  var pscrim = document.getElementById('pscrim');
+  if (ph) {
+    photo.style.backgroundImage = "url('" + ph + "')";
+    var focus = ("{{FOCUS}}" || "").trim();
+    if (focus) photo.style.backgroundPosition = focus;
+    var split = parseFloat("{{SPLIT}}") || 46;
+    photo.style.width = split + '%';
+    var mono = parseFloat("{{MONO}}");
+    if (isNaN(mono)) mono = 0.35;          // keep the scene alive - 1.0 flattens it
+    photo.style.filter = 'grayscale(' + mono + ') contrast(1.10) brightness(' +
+                         (("{{DIM}}".trim() || "0.85")) + ')';
+    pscrim.remove();          // the mask above does the blending
+  } else { photo.remove(); pscrim.remove(); }
+
+  // ---- the light source: many elements, so it reads as a real object ----
+  var kind = ("{{VIZ}}" || "candles").trim().toLowerCase();
+  var viz = document.getElementById('viz');
+  var seed = 23;
+  var rnd = function () { seed = (seed * 1103515245 + 12345) % 2147483648; return (seed % 1000) / 1000; };
+  if (kind === 'none') { viz.remove(); }
+  else if (kind === 'candles') {
+    var base = 50;
+    for (var i = 0; i < 16; i++) {
+      var up = rnd() > 0.42;
+      base += (up ? 1 : -1) * (6 + rnd() * 12);
+      base = Math.max(18, Math.min(88, base));
+      var body = 14 + rnd() * 34;
+      var c = document.createElement('div');
+      c.className = 'candle ' + (up ? 'up' : 'down');
+      c.style.height = body + '%';
+      c.style.marginBottom = (base - body / 2) * 0.55 + '%';
+      var w = document.createElement('div');
+      w.className = 'wick';
+      w.style.height = (body + 22 + rnd() * 26) + '%';
+      w.style.bottom = '-12%';
+      c.appendChild(w);
+      viz.appendChild(c);
+    }
+  } else if (kind === 'eq') {
+    for (var j = 0; j < 30; j++) {
+      var h = 12 + Math.abs(Math.sin(j / 3.1)) * 72 * (0.45 + rnd() * 0.55);
+      var b = document.createElement('div');
+      b.className = 'bar up';
+      b.style.height = h + '%';
+      viz.appendChild(b);
+    }
+  } else if (kind === 'line') {
+    viz.classList.add('viz--line');
+    var pts = [], y = 70;
+    for (var k = 0; k <= 22; k++) { y += (rnd() - 0.42) * 16; y = Math.max(8, Math.min(92, y));
+      pts.push((k / 22 * 100).toFixed(1) + ',' + (100 - y).toFixed(1)); }
+    viz.innerHTML =
+      '<svg width="420" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">' +
+      '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + "{{SRC}}" +
+      '" stroke-width="2.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>';
+    viz.style.filter = 'drop-shadow(0 0 18px ' + "{{SRC}}" + ')';
+  }
+
+  // bloom + spill keyed to the object
+  requestAnimationFrame(function () {
+    var v = document.getElementById('viz');
+    var bloom = document.getElementById('bloom'), sp = document.getElementById('spill');
+    if (!v) { if (bloom) bloom.remove(); if (sp) sp.remove(); return; }
+    var r = v.getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    var size = Math.min(Math.max(r.width, r.height) * 1.8 + 160, stage.clientWidth * 0.52);
+    [[bloom, size, 0], [sp, size * 1.05, stage.clientWidth * 0.10 * (side === 'left' ? -1 : 1)]]
+      .forEach(function (pair) {
+        var el = pair[0], s = pair[1], lean = pair[2];
+        if (!el) return;
+        el.style.width = s + 'px'; el.style.height = s + 'px';
+        el.style.left = (cx + lean - s / 2) + 'px';
+        el.style.top = (cy - s / 2) + 'px';
+      });
+  });
+
+  // ---- type ----
+  var h = document.getElementById('headline');
+  var head = "{{HEADLINE}}".trim(), lit = "{{LIT}}".trim();
+  var cls = (("{{LIT_STYLE}}" || "").trim().toLowerCase() === 'bar') ? 'bar' : 'lit';
+  h.innerHTML = head + (lit ? (head ? '<br>' : '') + '<span class="' + cls + '">' + lit + '</span>' : '');
+  if (!head && !lit) h.remove();
+
+  var pill = document.getElementById('pill');
+  if (!"{{PILL}}".trim()) pill.remove(); else pill.textContent = "{{PILL}}".trim();
+
+  if (h.parentNode) {
+    var col = document.querySelector('.col');
+    var maxW = col.clientWidth, maxH = stage.clientHeight * 0.46;
+    var size2 = parseFloat(getComputedStyle(h).fontSize);
+    var fits = function () { return h.scrollHeight <= maxH && h.scrollWidth <= maxW; };
+    while (size2 < 200 && fits()) { size2 += 4; h.style.fontSize = size2 + 'px'; }
+    while (size2 > 44 && !fits()) { size2 -= 4; h.style.fontSize = size2 + 'px'; }
+  }
+</script>
+</body>
+</html>

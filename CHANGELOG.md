@@ -192,3 +192,24 @@ separates them from competent work.
 - The insight type column narrowed to 42%. A multi-word `LIT` with `LIT_STYLE=bar` wrapped into
   a slab so large it covered the light source behind it; the template now says to keep a bar
   accent to one word.
+
+## 1.7.0 - 2026-10-28
+
+The premium register was producing austere, empty work: one portrait, one glowing bar and a
+large field of black. Technically compliant with its own doctrine, and visually cheap.
+
+### Added
+- **`glow-and-light.md` section 7, Density.** A real environment photograph behind everything
+  (a gradient is not a place), colour kept rather than crushed, a light source with real
+  structure, and the subject blended with a mask. If a large area carries nothing, it is not
+  finished.
+- **`assets/templates/scene.html`** - eleventh layout and the dense build: environment photo,
+  `VIZ` light object (16 candlesticks with wicks / 30 equaliser bars / a plotted line), subject
+  feathered into the scene with a CSS mask, colour preserved.
+
+### Fixed
+- Environment dimming defaulted so dark the room became a smear - the exact failure the
+  template exists to prevent. Defaults are now blur 9px, brightness 0.78.
+- The subject edge was being hidden under an overlaid dark band rather than blended; the photo
+  now feathers its own edge with `mask-image`.
+- `MONO` defaulted near 1.0, draining the picture. The useful range in a scene is 0.2-0.4.
