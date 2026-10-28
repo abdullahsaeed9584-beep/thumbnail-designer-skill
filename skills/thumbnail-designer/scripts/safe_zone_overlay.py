@@ -4,6 +4,10 @@
 Red = avoid zone, cyan = 4% margin, white = rule-of-thirds."""
 import argparse
 from PIL import Image, ImageDraw
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent))
+from scratch import proof_dir, proof_path
 
 def main():
     ap = argparse.ArgumentParser()
@@ -11,6 +15,8 @@ def main():
     ap.add_argument("--platform", default="yt",
                     choices=["yt", "vertical", "square", "ytbanner"])
     ap.add_argument("--out")
+    ap.add_argument("--here", action="store_true",
+                    help="write beside the source instead of the temp proof folder")
     a = ap.parse_args()
     img = Image.open(a.input).convert("RGBA")
     W, H = img.size
@@ -44,7 +50,9 @@ def main():
         d.rectangle([x0, y0, x1, y1], outline=(0, 255, 120, 255), width=max(3, W // 500))
         # desktop strip: full width, same height band
         d.rectangle([0, y0, W, y1], outline=(255, 210, 0, 200), width=max(2, W // 900))
-    out = a.out or a.input.rsplit(".", 1)[0] + "_safezone.png"
+    # Proofs are evidence for whoever is doing the work, not deliverables.
+    # Writing them beside the artwork is how a delivery folder fills up.
+    out = a.out or proof_path(a.input, "_safezone.png", here=a.here)
     Image.alpha_composite(img, ov).convert("RGB").save(out)
     print(out)
 

@@ -23,6 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from render_html import find_chrome, have_playwright  # noqa: E402
+from scratch import proof_path  # noqa: E402
 
 SVG_NS = "{http://www.w3.org/2000/svg}"
 XLINK = "{http://www.w3.org/1999/xlink}href"
@@ -209,7 +210,8 @@ def export_pngs(svg_path, outdir, sizes, pw, chrome):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("svg")
-    ap.add_argument("--sheet", help="write a scale + monochrome contact sheet here")
+    ap.add_argument("--sheet", nargs="?", const="AUTO",
+                    help="scale + one-colour contact sheet; bare flag = temp proof folder")
     ap.add_argument("--png-out", help="also export transparent PNGs into this directory")
     ap.add_argument("--png-sizes", default="64,256,1024")
     a = ap.parse_args()
@@ -227,6 +229,8 @@ def main():
     if not issues:
         print("  OK    structure, vector purity and type all clean")
 
+    if a.sheet == "AUTO":
+        a.sheet = proof_path(a.svg, "_proof.png")
     pw, chrome = have_playwright(), find_chrome()
     if (a.sheet or a.png_out) and not (pw or chrome):
         print("  WARN  no headless browser - cannot rasterise. Do not claim PNG exports.")

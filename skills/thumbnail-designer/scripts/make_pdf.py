@@ -21,6 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from render_html import fill, find_chrome, have_playwright, DEFAULTS  # noqa: E402
+from scratch import proof_path  # noqa: E402
 
 MM_PER_IN = 25.4
 PT_PER_IN = 72.0
@@ -198,7 +199,8 @@ def main():
     ap.add_argument("--bleed", type=float, default=3.0, help="mm per edge (0 for none)")
     ap.add_argument("--safe", type=float, default=5.0, help="mm clear of trim for type")
     ap.add_argument("--marks", action="store_true", help="draw crop marks in the bleed")
-    ap.add_argument("--proof", metavar="PNG", help="also write a lookable raster proof of the page")
+    ap.add_argument("--proof", nargs="?", const="AUTO", metavar="PNG",
+                    help="lookable raster proof; bare flag = temp proof folder")
     ap.add_argument("--proof-dpi", type=int, default=150)
     ap.add_argument("--keep-html", action="store_true")
     ap.add_argument("--sizes", action="store_true")
@@ -215,6 +217,8 @@ def main():
     if not (pw or chrome):
         sys.exit("no headless browser found - cannot produce a PDF. Say so; do not claim one.")
 
+    if a.proof == "AUTO":
+        a.proof = proof_path(a.out, "_proof.png")
     trim_w, trim_h = parse_trim(a.trim, a.landscape)
     page_w, page_h = trim_w + 2 * a.bleed, trim_h + 2 * a.bleed
 

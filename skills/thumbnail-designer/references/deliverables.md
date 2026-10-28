@@ -16,10 +16,11 @@ it changes the tool, the canvas and the whole workflow.
 | **Motion** | a timed sequence (MP4/GIF/WEBM/frames) | `animate.py` | logo stings, animated posts, banner ads |
 | **Source** | the thing that regenerates the design | the HTML/SVG/JSON plus the exact command | handover, revisions, batch |
 
-**Always deliver the source alongside the artefact.** The filled HTML, the SVG, the deck
-JSON and the command line are the editable file in this environment. That is a real
-handover: the user can change a word and rebuild. It is not a PSD, and must never be
-described as one.
+**Deliver the source when it is asked for, not by reflex** — see `delivery.md`. The
+filled HTML, the SVG, the deck JSON and the command line are the editable file in
+this environment, and handing them over lets the user change a word and rebuild. But
+shipping them unasked doubles the file count for a benefit nobody requested. They are
+not a PSD, and must never be described as one.
 
 ---
 

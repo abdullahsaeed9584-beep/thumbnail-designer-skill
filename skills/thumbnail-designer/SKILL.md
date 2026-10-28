@@ -33,15 +33,18 @@ never the default answer.
    (real CC0 photography) → abstraction, and only when abstraction is the intent.
    **Code-drawn scenery is the fastest way to look AI-made.** A gradient is not a place.
 7. **Build in layer order** → `references/render-pipeline.md`.
-8. **Prove it** (not optional) → `references/qa-export.md` for the full checklist:
+8. **Prove it** (not optional) → `references/qa-export.md` for the full checklist.
+   Proofs go to the temp working folder, never the delivery folder:
    - `python scripts/thumb_test.py out.jpg` — mobile 168px, grayscale, squint, feed
    - `python scripts/contrast_check.py --image out.jpg --box <x,y,w,h> --fg "#FFF"`
    - `python scripts/safe_zone_overlay.py out.jpg`
    - PDF → `make_pdf.py --proof`; SVG → `svg_check.py --sheet`; motion → a filmstrip
    - **Open those images and look.** Then score with `references/scorecard.md`.
      Below 32/40, or any axis at 0 → fix and re-test before delivering.
-9. **Deliver**: save, present, hand over the source, and note the tier, assumptions and
-   limitations in 1–3 lines.
+9. **Deliver only the finished files** → `references/delivery.md`. One file per thing
+   the user asked for, in the folder they expect, plus 1–3 lines naming the tier,
+   assumptions and limitations. No proofs, no drafts, no variants, no duplicate
+   formats unless they were asked for.
 
 ## Routing — by discipline
 
@@ -77,6 +80,7 @@ never the default answer.
 | Type, layout, hierarchy, effects | `composition-type.md` |
 | Urdu / Arabic / RTL | `composition-type.md` §Urdu + `urdu-rtl.html` |
 | Ideas only, no build | `cases.md §K` |
+| What to hand over, and what to leave out | `delivery.md` |
 
 ## Hard rules
 
@@ -91,6 +95,10 @@ never the default answer.
   features. `commerce.md`.
 - **Text exact.** Keep the user's wording; verify spelling, prices and phone numbers on
   the rendered pixels, not in the command that made them.
+- **Deliver the result, not the process.** Explore concepts internally; ship one.
+  Working files live in the temp proof folder (`scripts/scratch.py`), finished files
+  live in the output folder. Never create a folder per step or a preview per stage.
+  Fewer files is not less work — it is the work, finished.
 - **Never claim a file you did not write.** No PSD, AI, Figma, .pptx, CMYK or audio here —
   `deliverables.md` lists what to offer instead.
 - **Effects need a purpose** — separation, hierarchy, story, readability, realism.

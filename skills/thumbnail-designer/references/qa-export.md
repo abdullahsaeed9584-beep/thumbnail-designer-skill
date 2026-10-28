@@ -36,6 +36,9 @@ Each of these writes something to LOOK at, because none of them can be judged fr
 `references/scorecard.md` - 10 axes, 0-4 each. **Ship at 32/40 or above, with no axis at 0**, and the honesty axis never at 0. Below that: fix and re-test. If something is unfixable in the current tier, say so plainly rather than shipping it quietly.
 
 ## Deliverables
+
+Proofs are working material. They route to the temp folder automatically - see
+`delivery.md`. Ship the finished files only.
 1. Final image(s), presented.
 2. The original kept separately and unmodified.
 3. The source that regenerates it - the filled HTML, the SVG, the deck JSON, and the exact command. PSD/AI/Figma/.pptx are not producible here; offer this instead and say so. See `deliverables.md`.

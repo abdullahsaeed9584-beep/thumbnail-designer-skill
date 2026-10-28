@@ -15,6 +15,10 @@ Exit code 1 if a measurable check fails (ratio, pixel size, file size, flat cont
 import argparse
 import os
 import sys
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent))
+from scratch import proof_dir, proof_path
 
 try:
     from PIL import Image, ImageDraw, ImageFilter
@@ -118,14 +122,20 @@ def contrast_spread(img):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("image")
-    ap.add_argument("--outdir", default=None)
+    ap.add_argument("--outdir", default=None,
+                    help="default: a temp proof folder, not the image's own directory")
+    ap.add_argument("--here", action="store_true",
+                    help="write the four proofs beside the source image")
     ap.add_argument("--competitors", nargs="*", default=[])
     ap.add_argument("--max-bytes", type=int, default=0, help="0 = infer from ratio")
     a = ap.parse_args()
 
     img = Image.open(a.image)
     base = os.path.splitext(os.path.basename(a.image))[0]
-    outdir = a.outdir or os.path.dirname(os.path.abspath(a.image))
+    # Five PNGs per run. Next to the artwork that is clutter; in a temp folder
+    # it is still openable, which is all a proof needs to be.
+    outdir = a.outdir or (os.path.dirname(os.path.abspath(a.image))
+                          if a.here else str(proof_dir(a.image)))
     os.makedirs(outdir, exist_ok=True)
     p = lambda suffix: os.path.join(outdir, f"{base}_{suffix}.png")
 
