@@ -254,3 +254,17 @@ Audit and packaging pass.
 - Two rules to `glow-and-light.md` section 7, both from errors made building the gallery: the
   subject must belong to the scene (a sunlit portrait in a dark club gives itself away through
   light direction and colour temperature), and the light source needs enough visual weight.
+
+## 1.7.3 - 2026-10-28
+
+### Changed
+- **Licence: MIT replaced with a proprietary all-rights-reserved licence.** MIT was the wrong
+  choice for a product that is sold - it grants every buyer the right to redistribute and
+  resell the skill. The new `LICENSE` permits reading, evaluating and licensed use, and
+  withholds redistribution, resale and derivative products. Output images stay the user's own.
+  The repository remains public: readable source is not an open-source grant, and the licence
+  says so explicitly.
+- `plugin.json` now declares `"SEE LICENSE IN LICENSE"`; `SKILL.md` frontmatter declares
+  `Proprietary - see LICENSE`; the README badge and licence section match.
+- Third-party terms called out separately: fonts stay OFL, and stock photography keeps the
+  licence and model-release terms of its source.

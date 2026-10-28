@@ -5,7 +5,7 @@
 **A senior-art-director skill for Claude that designs, renders, critiques, A/B tests and
 batch-produces premium thumbnails — and proves the result before shipping it.**
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-0B0E14?style=flat-square)](LICENSE)
+[![Licence: proprietary](https://img.shields.io/badge/licence-proprietary-0B0E14?style=flat-square)](LICENSE)
 ![Skill](https://img.shields.io/badge/type-agent%20skill-2563EB?style=flat-square)
 ![Templates](https://img.shields.io/badge/templates-12-16A34A?style=flat-square)
 ![Scripts](https://img.shields.io/badge/scripts-9-0891B2?style=flat-square)
@@ -266,4 +266,7 @@ A bad output means a missing rule. Add it to the matching file in `references/`,
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE). Fonts are OFL and fetched at setup, not vendored.
+Proprietary — see [LICENSE](LICENSE). The source is public to read and evaluate; it is not
+open source, and redistributing or reselling it is not permitted. Images you make with the
+skill are yours. Fonts are OFL and fetched at setup, not vendored; stock photography keeps
+the licence and model-release terms of its source.

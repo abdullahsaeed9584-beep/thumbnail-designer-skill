@@ -1,7 +1,7 @@
 ---
 name: thumbnail-designer
 description: Premium graphic design — thumbnails, covers, social posts, ads, banners and posters. Designs, renders, critiques, A/B tests, resizes and batch-produces for YouTube, Shorts, Reels, TikTok, Instagram, Facebook, LinkedIn, X, podcast, OG, Fiverr and print. Handles topic-only briefs, video titles, personal photos under strict face/hair identity preservation, reference images, brand kits, Urdu/RTL headlines, real stock photography, motivated-light glow, cinematic grading, typography, safe zones and CTR critique. Use whenever the user mentions thumbnail, cover image, banner, poster, ad creative, gig image, CTR, "make it like this", design ideas, or wants a photo placed into a designed layout — even if they don't say "thumbnail".
-license: MIT
+license: Proprietary - see LICENSE
 ---
 
 # Thumbnail Designer
