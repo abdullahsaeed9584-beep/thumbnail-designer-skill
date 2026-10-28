@@ -1,0 +1,179 @@
+<!doctype html>
+<!-- INSIGHT - the Premium Insight register. A light source inside the frame, the people
+     desaturated, refined mixed-case type, one annotation mark.
+     Doctrine: references/glow-and-light.md. Works for any niche - finance, health,
+     psychology, business, tech, sport - and for posters and ads, not only thumbnails.
+
+     render_html.py insight.html out.png --size 1280x720 \
+       --var PHOTO="work/me.jpg" --var HEADLINE="I just" --var LIT="Profit" \
+       --var SRC="#37E07A" --var SOURCE=bar --var PILL="Most people guess" \
+       --var ARROW=1 --var MONO=0.9
+
+     SOURCE  bar | wave | orb | none      the thing emitting the light
+     LIT     the one word the light touches (set LIT_STYLE=bar for a glowing slab)
+     MONO    0-1, how far the photo goes to black and white (default 0.9)
+     SIDE    right (default) or left - which side the subject sits on -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Insight thumbnail</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="premium.css">
+<style>
+  :root { --src: {{SRC}}; --base: #05070B; --vignette: 0.5; }
+  .stage { background: #05070B; }
+
+  .ground { position: absolute; inset: 0;
+    background: radial-gradient(90% 80% at 50% 48%, #121722 0%, #05070B 72%); }
+
+  .photo { position: absolute; top: 0; bottom: 0; right: 0; width: 56%;
+    background-size: cover; background-position: center; }
+  .side-left .photo { right: auto; left: 0; }
+  .scrim { position: absolute; inset: 0; z-index: 2; }
+
+  /* type sits BEHIND the subject so the subject masks it */
+  /* padding-bottom reserves the pill's band so the headline can never sit on it */
+  .col { position: absolute; top: 0; bottom: 0; left: 5%; width: 48%; z-index: 7;
+    display: flex; flex-direction: column; justify-content: center; gap: 22px;
+    padding-bottom: 16%; }
+  .side-left .col { left: auto; right: 5%; align-items: flex-end; text-align: right; }
+  .headline--premium { font-size: 104px; line-height: 1.14; }
+
+  .source--bar  { left: 46%; top: 24%; height: 46%; }
+  .source--wave { left: 40%; top: 42%; }
+  .source--orb  { left: 42%; top: 34%; width: 180px; height: 180px; }
+
+  .pill { left: 6%; bottom: 13%; }
+  .side-left .pill { left: auto; right: 6%; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="ground"></div>
+  <div class="photo mono" id="photo"></div>
+  <div class="scrim" id="scrim"></div>
+  <div class="falloff" id="falloff"></div>
+
+  <div class="bloom" id="bloom"></div>
+  <div class="source" id="source"></div>
+  <div class="spill" id="spill"></div>
+
+  <div class="col">
+    <h1 class="headline--premium" id="headline"></h1>
+  </div>
+
+  <div class="pill" id="pill"></div>
+  <div class="annot" id="annot"></div>
+
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="guides"></div>
+</div>
+<script>
+  var stage = document.getElementById('stage');
+  var side = ("{{SIDE}}" || "right").trim().toLowerCase();
+  if (side === "left") stage.classList.add('side-left');
+
+  // ---- photo, pushed toward mono so the source carries the only colour ----
+  var src = "{{PHOTO}}".trim();
+  var photo = document.getElementById('photo');
+  if (src) {
+    photo.style.backgroundImage = "url('" + src + "')";
+    var focus = ("{{FOCUS}}" || "").trim();
+    if (focus) photo.style.backgroundPosition = focus;
+    var split = parseFloat("{{SPLIT}}") || 56;
+    photo.style.width = split + '%';
+    // dissolve the photo edge, as photo-split does - a straight edge kills the illusion
+    var d = 100 - split;
+    document.getElementById('scrim').style.background =
+      'linear-gradient(' + (side === 'left' ? '270deg' : '90deg') + ', var(--base) 0%,' +
+      ' color-mix(in srgb, var(--base) 96%, transparent) ' + Math.max(d - 8, 2) + '%,' +
+      ' color-mix(in srgb, var(--base) 55%, transparent) ' + (d + 16) + '%,' +
+      ' transparent ' + Math.min(d + 40, 96) + '%)';
+  } else { photo.remove(); }
+  var mono = "{{MONO}}".trim();
+  document.documentElement.style.setProperty('--mono', mono === '' ? 0.9 : parseFloat(mono));
+
+  // ---- the light source ----
+  var kind = ("{{SOURCE}}" || "bar").trim().toLowerCase();
+  var sEl = document.getElementById('source');
+  var bloom = document.getElementById('bloom');
+  if (kind === 'none') {
+    sEl.remove(); bloom.remove();
+    document.getElementById('spill').remove();
+    document.getElementById('falloff').remove();
+  } else {
+    sEl.classList.add('source--' + kind);
+    if (kind === 'wave') {
+      // deterministic waveform so renders are reproducible
+      var seed = 11;
+      for (var i = 0; i < 34; i++) {
+        seed = (seed * 1103515245 + 12345) % 2147483648;
+        var h = 14 + Math.abs(Math.sin(i / 3.2)) * 110 * (0.5 + (seed % 1000) / 2000);
+        var b = document.createElement('i');
+        b.style.height = h.toFixed(0) + 'px';
+        sEl.appendChild(b);
+      }
+    }
+    // put the bloom exactly over the source, scaled up - that is the emission
+    requestAnimationFrame(function () {
+      var r = sEl.getBoundingClientRect();
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      // Cap it. 3.4x a tall source is wider than the frame, and a screen-blend wash
+      // that size floods everything - at which point nothing reads as a light source.
+      var size = Math.min(Math.max(r.width, r.height) * 1.9 + 140, stage.clientWidth * 0.46);
+      bloom.style.width = size + 'px'; bloom.style.height = size + 'px';
+      bloom.style.left = (cx - size / 2) + 'px';
+      bloom.style.top = (cy - size / 2) + 'px';
+      // falloff centres on the source: everything away from it goes dark
+      document.documentElement.style.setProperty('--src-x', (cx / stage.clientWidth * 100) + '%');
+      document.documentElement.style.setProperty('--src-y', (cy / stage.clientHeight * 100) + '%');
+      var sp = document.getElementById('spill');
+      if (sp) {
+        // The spill pool leans TOWARD the subject - motivated light has to land on
+        // the person, otherwise the source is just a glowing shape next to them.
+        var ss = size * 1.05;
+        var lean = stage.clientWidth * 0.11 * (side === 'left' ? -1 : 1);
+        sp.style.width = ss + 'px'; sp.style.height = ss + 'px';
+        sp.style.left = (cx + lean - ss / 2) + 'px';
+        sp.style.top = (cy - ss / 2) + 'px';
+      }
+    });
+  }
+
+  // ---- headline: mixed case, one lit word ----
+  var h = document.getElementById('headline');
+  var head = "{{HEADLINE}}".trim(), lit = "{{LIT}}".trim();
+  var litClass = (("{{LIT_STYLE}}" || "").trim().toLowerCase() === 'bar') ? 'bar' : 'lit';
+  h.innerHTML = (head ? head : '') +
+    (lit ? (head ? '<br>' : '') + '<span class="' + litClass + '">' + lit + '</span>' : '');
+  if (!head && !lit) h.remove();
+
+  // ---- annotation: at most one arrow plus one pill ----
+  var pill = document.getElementById('pill');
+  if (!"{{PILL}}".trim()) { pill.remove(); } else { pill.textContent = "{{PILL}}".trim(); }
+  var annot = document.getElementById('annot');
+  if (/^(1|on|true|yes)$/i.test(("{{ARROW}}" || "").trim())) {
+    annot.style.left = '0'; annot.style.top = '0';
+    annot.style.width = '100%'; annot.style.height = '100%';
+    var x1 = side === 'left' ? 72 : 28, x2 = side === 'left' ? 54 : 45;
+    annot.innerHTML =
+      '<svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">' +
+      '<path class="ink" vector-effect="non-scaling-stroke" d="M ' + x1 + ' 46 C ' +
+      ((x1 + x2) / 2) + ' 56, ' + x2 + ' 54, ' + x2 + ' 44"/>' +
+      '<path class="ink" vector-effect="non-scaling-stroke" d="M ' + (x2 - 2.4) + ' 47.5 L ' +
+      x2 + ' 43 L ' + (x2 + 2.4) + ' 47.5"/></svg>';
+  } else { annot.remove(); }
+
+  // ---- fit ----
+  if (h.parentNode) {
+    var col = document.querySelector('.col');
+    var maxW = col.clientWidth, maxH = stage.clientHeight * 0.44;
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    var fits = function () { return h.scrollHeight <= maxH && h.scrollWidth <= maxW; };
+    while (size < 190 && fits()) { size += 4; h.style.fontSize = size + 'px'; }
+    while (size > 44 && !fits()) { size -= 4; h.style.fontSize = size + 'px'; }
+  }
+</script>
+</body>
+</html>

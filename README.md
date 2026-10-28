@@ -7,7 +7,7 @@ batch-produces premium thumbnails — and proves the result before shipping it.*
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-0B0E14?style=flat-square)](LICENSE)
 ![Skill](https://img.shields.io/badge/type-agent%20skill-2563EB?style=flat-square)
-![Templates](https://img.shields.io/badge/templates-9-16A34A?style=flat-square)
+![Templates](https://img.shields.io/badge/templates-10-16A34A?style=flat-square)
 ![Scripts](https://img.shields.io/badge/scripts-9-0891B2?style=flat-square)
 ![Platforms](https://img.shields.io/badge/platforms-13-F2A20C?style=flat-square)
 
@@ -98,6 +98,16 @@ general creator, gig, gaming and reaction work.
 exactly why this register wins the mobile feed. The subject slot takes your cut-out photo;
 without one the type becomes the subject automatically.</sub>
 
+**D — Premium Insight.** The top tier: a **light source inside the frame** (glowing bar,
+waveform, orb) whose colour lands on the subject, the background *and* the headline; everything
+else desaturated to black and white so the accent is the only colour; refined mixed-case type
+with no stroke; one hand-drawn annotation. Doctrine in `references/glow-and-light.md`.
+
+![Premium insight examples](docs/style-premium-insight.png)
+
+<sub>Three light sources — bar, waveform, orb — three palettes, both directions. The glow is
+motivated: you can point at what is emitting it, and it lights the person.</sub>
+
 **B — Cinematic Editorial.** Dark base, one restrained accent, depth of field, rim light, gradient
 type with a soft dark glow, 2–3% grain. For documentary, long-form, business and premium brands.
 
@@ -128,7 +138,7 @@ pasted on.
 
 ## Why this one is different
 
-**It renders.** Nine production HTML/CSS layouts plus a Python compositing pipeline —
+**It renders.** Ten production HTML/CSS layouts plus a Python compositing pipeline —
 background depth, contact shadow, rim light, colour match, gradient type, grain finish. Most
 thumbnail "skills" only produce a brief.
 
@@ -154,6 +164,7 @@ skills/thumbnail-designer/
 ├── SKILL.md                  entry point: workflow, routing, hard rules
 ├── references/
 │   ├── style-registers.md    pick the aesthetic register before concepting
+│   ├── glow-and-light.md     motivated light, selective desaturation, annotation
 │   ├── premium-standard.md   the quality bar — read on every build
 │   ├── render-pipeline.md    the 10-layer build order and the commands
 │   ├── composition-type.md   composition, typography, graphics, Urdu/RTL
@@ -176,7 +187,7 @@ skills/thumbnail-designer/
 │   ├── resize.py             focal-aware multi-platform re-crop
 │   └── fetch_fonts.py        licence-safe Google Fonts
 ├── assets/
-│   ├── templates/            9 production layouts + base.css + impact.css
+│   ├── templates/           10 production layouts + base.css + impact.css
 │   ├── brand-kits/           per-client style systems
 │   └── fonts/                OFL fonts land here
 └── evals/test-prompts.md     25 regression prompts
@@ -217,6 +228,7 @@ python scripts/thumb_test.py out/final.jpg --competitors comp1.jpg comp2.jpg
 | `comparison.html` | real before/after or A vs B, diagonal split, warm vs cool | 1280×720 |
 | `urdu-rtl.html` | Urdu/Nastaliq, mirrored Z-pattern, descender room | 1280×720 |
 | `vertical-cover.html` | Shorts / Reels / TikTok | 1080×1920 |
+| `insight.html` | premium insight: light source in frame, mono subject, refined type | any |
 | `photo-split.html` | real photograph full-bleed one side, type the other — no cut-out | any |
 | `showcase.html` | any offer/product/service: hook left, device right — `DEVICE=browser/player/screen/none` | any |
 | `text-layer.html` | headline only, transparent — for the compositing route | 1280×720 |

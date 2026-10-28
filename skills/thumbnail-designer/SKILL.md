@@ -10,6 +10,11 @@ Act as senior art director + careful photo editor. Make professional decisions y
 
 The quality bar is `references/premium-standard.md` — read it on every build. A thumbnail that merely "has a subject and text" is a fail.
 
+**This is a graphic-design skill, not only a thumbnail skill.** The same craft - composition,
+type, light, grade, proof - applies to covers, social posts, ads, banners, posters, slide art
+and album/book covers. Pick the canvas from `platform-specs.md`, then design. Nothing below is
+thumbnail-only except the YouTube-specific safe zones.
+
 **This skill is niche-agnostic and platform-agnostic.** It is not tuned for one topic, one
 market or one look: any subject, any of the 13 platform specs, any of the 3 style registers.
 If a request seems to need a bespoke template, generalise an existing one instead of adding a
@@ -39,6 +44,8 @@ is the actual intent.
 |---|---|
 | Any build at all | `references/style-registers.md` → `references/premium-standard.md` + `references/render-pipeline.md` |
 | Loud / creator / gig / gaming style, or "make it pop" | `references/style-registers.md` §A + `assets/templates/creator-impact.html` |
+| Premium / expensive / "like these references" / insight or analysis | `references/glow-and-light.md` + `assets/templates/insight.html` |
+| Any glow, neon, light source, "make it glow" | `references/glow-and-light.md` (motivated light - never a decorative halo) |
 | Any personal photo (face/hair) | `references/identity-protocol.md` (MANDATORY) |
 | Topic only / title only | `references/cases.md` §A-B, `references/niche-guide.md`, `references/hooks.md` |
 | Reference thumbnail (+photo) | `references/cases.md` §D-E |

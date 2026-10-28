@@ -154,3 +154,28 @@ read as synthetic.
 - **The scrim fade now tracks `SPLIT`.** With fixed gradient stops a wide photo ended inside
   open frame and showed its straight edge, while a narrow one got scrimmed into mud. The stops
   are computed from the split position.
+
+## 1.6.0 - 2026-10-28
+
+Studied a set of top-tier reference thumbnails and taught the skill the technique that
+separates them from competent work.
+
+### Added
+- **`references/glow-and-light.md`** - the motivated-light doctrine. Every glow must have a
+  visible source in the frame, and its colour must land on the subject, the background and the
+  type. Plus selective desaturation, the premium mixed-case type treatment, the annotation
+  layer, props that carry words, and stylised-not-fake data.
+- **Register D, Premium Insight** in `style-registers.md`.
+- **`assets/templates/premium.css`** - light sources (bar / wave / orb) with a three-stop
+  emissive core and a blurred bloom, local spill, source-centred falloff, mono treatment,
+  silver mixed-case headline, hand-drawn SVG annotation, pill labels.
+- **`assets/templates/insight.html`** - tenth layout, the register D build.
+- **General design canvases** in `platform-specs.md`: Instagram, stories, channel banners, X
+  and LinkedIn headers, display ads, slides, A4/A3 posters, flyers, covers, email headers,
+  with print notes. The skill is explicitly a graphic-design skill now, not a thumbnail-only one.
+
+### Fixed
+- Spill and bloom were sized at 3.4x the source and applied frame-wide, which flooded the
+  whole canvas and stopped the source reading as a source. Both are now capped and local, and
+  the spill leans toward the subject so motivated light actually lands on the person.
+- The insight headline could overrun the pill label; the column now reserves that band.

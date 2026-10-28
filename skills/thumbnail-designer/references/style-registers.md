@@ -8,6 +8,7 @@ follow its craft rules. Mixing registers is what makes work look amateur - commi
 | **A. Creator High-Impact** | loud, saturated, maximum stopping power | YouTube creators, gigs/services, gaming, reactions, finance hype, tutorials, most of the open feed |
 | **B. Cinematic Editorial** | restrained, moody, expensive | documentary, long-form, business, tech, premium brands, interviews |
 | **C. Clean Corporate** | calm, trustworthy, legible | B2B, SaaS, education, medical, LinkedIn, course platforms |
+| **D. Premium Insight** | expensive, analytical, cinematic | the top tier of creator work: finance, psychology, business breakdowns, documentaries, case studies, premium ads and posters |
 
 Default for a general YouTube creator request is **A**. Default for a brand, agency or B2B
 request is **B** or **C**. When the user supplies reference thumbnails, match their register.
@@ -68,6 +69,26 @@ Template: `assets/templates/creator-impact.html`.
 
 ---
 
+## D. Premium Insight - the recipe
+
+The look of the best-paid creator design. Three things define it, and all three must be present:
+
+1. **A light source inside the frame.** A glowing candlestick, waveform, screen, orb or sign -
+   and its colour lands on the subject, the background and the headline. Never a decorative
+   halo with no source.
+2. **Selective desaturation.** People and background pushed to black and white; the only
+   saturated colour in the frame is the source and its spill. This is what makes the accent hit.
+3. **Refined mixed-case type.** "One Big Gap", "Rhythmic Variability" - heavy neo-grotesque at
+   600-800 weight, silver gradient, soft shadow, set behind the subject. **No stroke, no 3D
+   extrude** - that is register A, and mixing the two looks cheap.
+
+Plus, sparingly: a thin white hand-drawn arrow from claim to proof, a red hand-drawn ellipse
+round the key word, small white or red pill labels. Two marks maximum.
+
+Full doctrine and build order: `glow-and-light.md`.  Templates: `insight.html`, and
+`photo-split.html` with `GLOW`.
+
+
 ## B. Cinematic Editorial — the recipe
 Dark base, one restrained accent, blurred photographic or gradient background, rim light keyed
 to the key light, contact shadow, 15-30% depth-of-field, silver or gold gradient type with a
@@ -85,6 +106,7 @@ Templates: `product-led.html`, `comparison.html`, `service-device.html` with a l
 
 ## Choosing, in one line
 Loud feed, creator, gig, gaming, reaction, hype → **A**.
+Insight, analysis, comparison, "how this really works", premium brand -> **D**.
 Brand, documentary, long-form, premium service → **B**.
 B2B, education, medical, enterprise → **C**.
 Reference supplied → whatever the reference is. Ask only if the references are mixed.

@@ -30,3 +30,25 @@ Never just squash. Re-crop around the focal point (`scripts/resize.py --focus 0.
 
 ## File rules
 sRGB. JPG at q~90, stepping down until it fits the limit (`finish.py --max-bytes`). PNG only when text sharpness demands it and the file still fits. Name per `SKILL.md`.
+
+## Beyond thumbnails - general design canvases
+
+The craft is the same; only the canvas and safe zones change.
+
+| Use | Size (px) | Notes |
+|---|---|---|
+| Instagram post / carousel | 1080x1350 (4:5) or 1080x1080 | Grid crops to square - keep the focal point centred |
+| Instagram / Facebook story | 1080x1920 | Top 10% and bottom 20% are UI |
+| YouTube channel banner | 2560x1440, safe area 1546x423 | Everything that matters inside the safe area |
+| X / Twitter header | 1500x500 | Avatar overlaps the lower left |
+| LinkedIn banner | 1584x396 | Avatar overlaps the left |
+| Display ad (MPU / leaderboard) | 300x250 / 728x90 / 160x600 | Tiny - one message, huge type, no fine detail |
+| Presentation slide | 1920x1080 | Readable from the back of a room: body text 24pt+ |
+| Poster, print | A4 2480x3508, A3 3508x4961 at 300 DPI | Add 3mm bleed if it goes to a printer; CMYK conversion is the printer's job, design in sRGB |
+| Flyer, print | A5 1748x2480 at 300 DPI | As above |
+| Album / book cover | 3000x3000 | Must read at 150x150 |
+| Email header | 1200x400 | Many clients block images - never put the only message in the image |
+
+For print, work at 300 DPI, keep text away from the trim edge by at least 5mm, and remember
+that saturated RGB cyans and greens will shift when converted. Deliver a PDF or a 300 DPI PNG
+and say which colour space it is in.

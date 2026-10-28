@@ -1,7 +1,7 @@
 {
   "name": "thumbnail-designer",
-  "version": "1.5.0",
-  "description": "Senior art director for premium thumbnails and cover images - designs, renders, critiques, A/B tests and resizes for YouTube, Shorts, Reels, TikTok, Instagram, Facebook, LinkedIn, podcast and OG, with strict face/hair identity preservation and Urdu/RTL support.",
+  "version": "1.6.0",
+  "description": "Premium graphic-design skill for Claude - thumbnails, covers, social, ads, banners and posters. Renders, proves and scores its output. Four style registers, motivated-light glow, identity-safe photo handling, Urdu/RTL.",
   "license": "MIT",
   "keywords": [
     "thumbnail",
