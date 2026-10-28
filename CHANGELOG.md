@@ -268,3 +268,66 @@ Audit and packaging pass.
   `Proprietary - see LICENSE`; the README badge and licence section match.
 - Third-party terms called out separately: fonts stay OFL, and stock photography keeps the
   licence and model-release terms of its source.
+
+## 1.8.0 - 2026-10-28
+
+A full audit of the skill against the whole graphic-design discipline, then the work to
+close the gaps. The skill was strong on screen design and honest about its limits; it had
+no way to actually *make* a logo, a print file, a dieline, a deck or an animation, and
+`references/qa-export.md` was orphaned - nothing routed to it.
+
+### Added - production, not description
+- **`make_pdf.py`** - HTML to a print-ready PDF whose page box is trim + bleed, with crop
+  marks. It reads the `/MediaBox` back out of the finished file and fails on a mismatch, so
+  "print-ready" is measured rather than asserted. `--proof` writes a raster to look at,
+  because a PDF nobody opened is not a checked deliverable.
+- **`svg_check.py`** - logo QA. Fails a file with no `viewBox` or an embedded raster,
+  warns on live text and filters, then renders a scale (16-512px) and one-colour contact
+  sheet.
+- **`text_to_paths.py`** - converts a wordmark to real glyph outlines via fontTools, with
+  variable-font instancing. A logo shipped as live `<text>` is not a logo.
+- **`dieline.py`** - dimensioned straight-tuck-end carton dieline as SVG: cut, crease, safe,
+  bleed, panel labels and an EAN-13 keepline at 100%.
+- **`make_deck.py`** - multi-page PDF deck plus slide PNGs from a JSON spec. Refuses an
+  unsourced statistic or chart, and flags slides that have become documents.
+- **`animate.py`** - frame-accurate motion rendering (Web Animations API seeking, not screen
+  recording) encoded to MP4/WebM/GIF with ffmpeg; `--frames-only` without it.
+- **`lint_templates.py`** - static checks on every template.
+- **Templates:** `print-page.html`, `signage.html` (RTL/Nastaliq, cap height in mm),
+  `infographic.html`, `logo-reveal.html`, plus `print.css`.
+- **References:** `deliverables.md`, `brand-identity.md`, `print-production.md`,
+  `commerce.md`, `data-and-decks.md`, `motion.md`, `reference-analysis.md`.
+- `evals/test-prompts.md` grew from 25 to 35 prompts.
+
+### Fixed - all found by running the thing, not by reading it
+- **`var top` in `infographic.html`** assigned to the read-only `window.top`, so every bar
+  height computed to `NaN%`. The numbers still rendered, so a broken chart looked like a
+  styling choice. **`var name` in `signage.html`** was the same bug a second time:
+  `window.name` coerces to a string, the script threw, and every piece of text on a sign
+  silently failed to render while the background looked perfect. `lint_templates.py` now
+  catches both classes.
+- **`base.css` pinned `html, body` and `.stage` to 1280x720**, so four templates that
+  advertised "any size" actually drew a 1280x720 design into the corner of the requested
+  canvas and left the rest black. Now viewport-relative; identical at 1280x720.
+- **Chip separator** `/\s*[-|]\s*/` allowed zero spaces, so "42-inch panel" split into "42"
+  and "inch panel" - a product spec cut in half.
+- **`thumb_test.py` treated every 1:1 image as a podcast cover** and failed a valid
+  1200x1200 marketplace listing. The 1:1 floor is now 1000 with a podcast note.
+- **`resize.py` cropped silently.** A 16:9 master forced to 9:16 loses 68% of the frame -
+  where the headline lives. It now reports the loss and says to rebuild instead.
+- **`make_pdf.py --landscape` swapped an already-landscape size**, turning 3000x2000 into
+  2000x3000. It now means "wider than tall".
+- **PDF proof raster** was sized in output pixels while the page is laid out in mm at CSS's
+  fixed 96 DPI, so the design sat small in the corner of a larger canvas.
+- **`fetch_stock.py` had one source.** Openverse was unreachable from the test machine, and
+  a single-source fetcher simply fails there. Added Wikimedia Commons as a fallback, with a
+  compliant user agent (Wikimedia returns 429 to generic ones) and per-image attribution.
+- `creator-impact.html` and `showcase.html` had `<img>` tags with no `onerror`, so a missing
+  asset rendered a broken-image icon.
+- `references/qa-export.md` existed but nothing linked to it. `SKILL.md` step 8 now does.
+
+### Changed
+- `SKILL.md` rewritten around two routing tables - by discipline and by input - with the
+  deliverable chosen before the canvas. Still under 150 lines.
+- `qa-export.md` gained per-deliverable checks: print, vector, motion and data each need a
+  different proof, and a raster check proves nothing about a PDF.

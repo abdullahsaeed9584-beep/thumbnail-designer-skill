@@ -1,0 +1,101 @@
+/* Print primitives. Loaded by print-page.html and any other PDF-bound template.
+
+   Deliberately NOT base.css: that file pins html/body to 1280x720, which is right
+   for a thumbnail stage and wrong for a page measured in millimetres. Sizes here
+   come from make_pdf.py, which injects --page-w/--page-h/--bleed/--safe/--trim-*
+   after this file loads, so everything below is expressed relative to those. */
+
+@font-face { font-family: 'Anton';         src: local('Anton'),         url('../fonts/Anton-Regular.ttf') format('truetype'); font-display: block; }
+@font-face { font-family: 'Bebas Neue';    src: local('Bebas Neue'),    url('../fonts/BebasNeue-Regular.ttf') format('truetype'); font-display: block; }
+@font-face { font-family: 'Archivo Black'; src: local('Archivo Black'), url('../fonts/ArchivoBlack-Regular.ttf') format('truetype'); font-display: block; }
+@font-face { font-family: 'Montserrat';    src: local('Montserrat'),    url('../fonts/Montserrat-Variable.ttf') format('truetype'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Poppins';       src: local('Poppins'),       url('../fonts/Poppins-ExtraBold.ttf') format('truetype'); font-weight: 800; font-display: block; }
+@font-face { font-family: 'Inter';         src: local('Inter'),         url('../fonts/Inter-Variable.ttf') format('truetype'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Noto Nastaliq Urdu'; src: local('Noto Nastaliq Urdu'), url('../fonts/NotoNastaliqUrdu-Variable.ttf') format('truetype'); font-display: block; }
+
+:root {
+  --base: #FFFFFF;
+  --ink: #101418;
+  --accent: #C8102E;
+  --support: #5A6472;
+  --display: 'Montserrat', 'Archivo Black', system-ui, sans-serif;
+  --support-font: 'Inter', 'Montserrat', system-ui, sans-serif;
+
+  /* Overridden by make_pdf.py. The fallbacks only exist so the file can be
+     opened in a browser for layout work without going through the script. */
+  --bleed: 3mm; --safe: 5mm;
+  --page-w: 154mm; --page-h: 216mm;
+  --trim-w: 148mm; --trim-h: 210mm;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: #FFFFFF; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+.page {
+  position: relative;
+  width: var(--page-w); height: var(--page-h);
+  overflow: hidden; background: var(--base);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Full-bleed art runs to the PAGE edge, not the trim edge. If it stops at the
+   trim, the guillotine's tolerance shows as a white sliver down one side. */
+.bleed-art { position: absolute; inset: 0; }
+
+/* Everything that must survive trimming lives inside .live. */
+.live {
+  position: absolute;
+  top: calc(var(--bleed) + var(--safe));
+  left: calc(var(--bleed) + var(--safe));
+  width: calc(var(--trim-w) - 2 * var(--safe));
+  height: calc(var(--trim-h) - 2 * var(--safe));
+  display: flex; flex-direction: column;
+}
+
+/* Proof guides: magenta trim, cyan safe area. Switch on with --var GUIDES=1 and
+   NEVER leave on in a file that goes to a printer. */
+.guides-print { position: absolute; inset: 0; pointer-events: none; display: none; }
+.guides-print.on { display: block; }
+.guides-print .trim {
+  position: absolute; left: var(--bleed); top: var(--bleed);
+  width: var(--trim-w); height: var(--trim-h);
+  outline: 0.2mm solid #FF00AA;
+}
+.guides-print .safe {
+  position: absolute;
+  left: calc(var(--bleed) + var(--safe)); top: calc(var(--bleed) + var(--safe));
+  width: calc(var(--trim-w) - 2 * var(--safe)); height: calc(var(--trim-h) - 2 * var(--safe));
+  outline: 0.2mm dashed #00C8FF;
+}
+
+/* type ------------------------------------------------------------------- */
+/* Print is read at arm's length, not at 168px. Sizes are in mm so they stay
+   physically correct whatever the page size is. */
+.kicker {
+  font-family: var(--support-font); font-weight: 800;
+  font-size: 3.2mm; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent);
+}
+.headline-print {
+  font-family: var(--display); font-weight: 900;
+  font-size: 14mm; line-height: 1.02; letter-spacing: -0.02em; color: var(--ink);
+}
+.sub-print {
+  font-family: var(--support-font); font-weight: 600;
+  font-size: 5mm; line-height: 1.28; color: var(--support);
+}
+.body-print {
+  font-family: var(--support-font); font-weight: 400;
+  font-size: 3.6mm; line-height: 1.5; color: var(--ink);
+}
+.cta-print {
+  display: inline-block; font-family: var(--support-font); font-weight: 800;
+  font-size: 4.6mm; letter-spacing: 0.02em;
+  padding: 3mm 7mm; border-radius: 1.6mm;
+  background: var(--accent); color: #FFFFFF;
+}
+.contact-print {
+  font-family: var(--support-font); font-weight: 700;
+  font-size: 3.6mm; letter-spacing: 0.04em; color: var(--ink);
+}
+.rule-print { width: 22mm; height: 1.2mm; background: var(--accent); border-radius: 0.6mm; }

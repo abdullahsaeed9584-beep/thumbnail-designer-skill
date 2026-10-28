@@ -1,7 +1,7 @@
 {
   "name": "thumbnail-designer",
-  "version": "1.7.3",
-  "description": "Premium graphic-design skill for Claude - thumbnails, covers, social, ads, banners and posters. Renders, proves and scores its output. Four style registers, motivated-light glow, identity-safe photo handling, Urdu/RTL.",
+  "version": "1.8.0",
+  "description": "Premium graphic-design skill for Claude across the whole discipline - thumbnails, covers, social, ads, logos and brand identity, print and packaging, signage, e-commerce listings, infographics, decks and motion. Renders, proves and scores its output as PNG, SVG, print-ready PDF and MP4. Four style registers, motivated-light glow, identity-safe photo handling, Urdu/RTL.",
   "license": "SEE LICENSE IN LICENSE",
   "keywords": [
     "thumbnail",
@@ -15,6 +15,18 @@
     "ctr",
     "typography",
     "compositing",
-    "urdu"
+    "urdu",
+    "logo",
+    "brand-identity",
+    "print",
+    "packaging",
+    "dieline",
+    "signage",
+    "infographic",
+    "presentation",
+    "motion",
+    "svg",
+    "pdf",
+    "e-commerce"
   ]
 }

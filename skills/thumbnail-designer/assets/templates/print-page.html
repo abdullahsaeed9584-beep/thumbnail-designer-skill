@@ -1,0 +1,128 @@
+<!doctype html>
+<!-- PRINT-PAGE - one page of a print deliverable: flyer, poster, certificate,
+     business card, menu page, invitation. Rendered by make_pdf.py, NOT render_html.py,
+     because the page size has to be physical.
+
+     python make_pdf.py print-page.html flyer.pdf --trim A5 --bleed 3 --marks \
+       --var KICKER="Now open" --var HEADLINE="Grand Opening" \
+       --var SUB="Two weeks of launch pricing" \
+       --var BODY="line one|line two|line three" \
+       --var CTA="Book a table" --var CONTACT="0300 1234567 - 12 Mall Road" \
+       --var ACCENT="#C8102E" --var BG="work/shop.jpg"
+
+     BG        full-bleed photograph (runs into the bleed automatically)
+     TONE      light (default) | dark  - sets the type colour over the art
+     ALIGN     left (default) | center
+     BODY      lines separated by |
+     GUIDES=1  draw the trim (magenta) and safe (cyan) outlines - PROOF ONLY,
+               never in the file you hand to a printer -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Print page</title>
+<link rel="stylesheet" href="print.css">
+<style>
+  :root { --accent: {{ACCENT}}; }
+  .scrim { position: absolute; inset: 0; }
+  .live { justify-content: flex-end; gap: 4mm; }
+  .live.center { align-items: center; text-align: center; }
+  .foot { margin-top: 3mm; display: flex; flex-direction: column; gap: 2.5mm; }
+  .dark .headline-print, .dark .body-print, .dark .contact-print { color: #FFFFFF; }
+  .dark .sub-print { color: rgba(255,255,255,0.86); }
+  .logo-print { position: absolute; right: calc(var(--bleed) + var(--safe));
+                top: calc(var(--bleed) + var(--safe)); height: 14mm; }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <div class="bleed-art" id="art"></div>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="live" id="live">
+    <div class="kicker" id="kicker"></div>
+    <h1 class="headline-print" id="headline"></h1>
+    <div class="rule-print" id="rule"></div>
+    <div class="sub-print" id="sub"></div>
+    <div class="foot">
+      <div class="body-print" id="body"></div>
+      <div><span class="cta-print" id="cta"></span></div>
+      <div class="contact-print" id="contact"></div>
+    </div>
+  </div>
+
+  <img class="logo-print" id="logo" src="{{LOGO}}" alt="" onerror="this.remove()">
+
+  <div class="guides-print" id="guides"><div class="trim"></div><div class="safe"></div></div>
+</div>
+<script>
+  var page = document.getElementById('page');
+  var tone = ("{{TONE}}" || "light").trim().toLowerCase();
+  if (tone === 'dark') page.classList.add('dark');
+  if (("{{ALIGN}}" || "").trim().toLowerCase() === 'center')
+    document.getElementById('live').classList.add('center');
+
+  var bg = "{{BG}}".trim(), art = document.getElementById('art');
+  var scrim = document.getElementById('scrim');
+  if (bg) {
+    art.style.background = "url('" + bg + "') center/cover no-repeat";
+    // A photo under type needs a gradient, not an opacity wash: a flat veil greys
+    // the whole picture, and in print grey mud is far more obvious than on screen.
+    scrim.style.background = (tone === 'dark')
+      ? 'linear-gradient(0deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.10) 72%)'
+      : 'linear-gradient(0deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.70) 40%, rgba(255,255,255,0.05) 76%)';
+  } else {
+    // No photograph supplied. A flat gradient leaves the upper two thirds of the
+    // page carrying nothing, which is the density failure this skill warns about
+    // everywhere else - so build a real field of colour instead and let the type
+    // sit against its lower edge.
+    var acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    art.style.background = (tone === 'dark')
+      ? 'linear-gradient(160deg, #10151C 0%, #1D2733 58%, #10151C 100%)'
+      : 'linear-gradient(160deg, #FFFFFF 0%, #F4F6F9 58%, #FFFFFF 100%)';
+    var field = document.createElement('div');
+    field.style.cssText =
+      'position:absolute;left:0;right:0;top:0;height:58%;' +
+      'background:linear-gradient(155deg, ' + acc + ' 0%, ' +
+      'color-mix(in srgb, ' + acc + ' 72%, #000) 100%);' +
+      'clip-path:polygon(0 0, 100% 0, 100% 86%, 0 100%);';
+    art.appendChild(field);
+    scrim.remove();
+  }
+
+  function set(id, txt) {
+    var el = document.getElementById(id);
+    if (!txt || !txt.trim()) { el.remove(); return null; }
+    el.textContent = txt.trim(); return el;
+  }
+  set('kicker', "{{KICKER}}");
+  set('headline', "{{HEADLINE}}");
+  set('sub', "{{SUB}}");
+  set('cta', "{{CTA}}");
+  set('contact', "{{CONTACT}}");
+
+  var body = "{{BODY}}".trim(), bodyEl = document.getElementById('body');
+  if (body) {
+    bodyEl.innerHTML = body.split('|').map(function (l) {
+      return l.trim();
+    }).filter(Boolean).join('<br>');
+  } else { bodyEl.remove(); }
+
+  if (!document.getElementById('headline')) {
+    var r = document.getElementById('rule'); if (r) r.remove();
+  }
+  if (/^(1|on|true|yes)$/i.test(("{{GUIDES}}" || "").trim()))
+    document.getElementById('guides').classList.add('on');
+
+  // Fit the headline to the live area. Print has no 168px test to hide behind -
+  // a headline that overflows is simply a headline that gets trimmed off.
+  var h = document.getElementById('headline');
+  if (h) {
+    var live = document.getElementById('live');
+    var maxW = live.clientWidth;
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    var fits = function () { return h.scrollWidth <= maxW && live.scrollHeight <= live.clientHeight; };
+    while (size > 10 && !fits()) { size -= 1; h.style.fontSize = size + 'px'; }
+  }
+</script>
+</body>
+</html>

@@ -186,7 +186,10 @@
     if (grade && grade !== "none") { g.className = 'grade on ' + grade; }
   }
 
-  var chipText = "{{CHIPS}}".split(/\s*[-|]\s*/).filter(function (s) { return s.trim(); });
+  // Separator is a pipe, or a hyphen WITH whitespace either side. The old
+  // /\s*[-|]\s*/ allowed zero spaces, so "42-inch panel" split into "42" and
+  // "inch panel" - a product spec silently cut in half.
+  var chipText = "{{CHIPS}}".split(/\s*\|\s*|\s+-\s+/).filter(function (s) { return s.trim(); });
   var chips = document.getElementById('chips');
   chipText.forEach(function (s) {
     var c = document.createElement('div');

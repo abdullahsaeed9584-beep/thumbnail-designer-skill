@@ -55,13 +55,34 @@ def main():
     img = Image.open(a.input)
     base = os.path.splitext(os.path.basename(a.input))[0]
     names = ALL.split(",") if a.presets == "all" else a.presets.split(",")
+    warned = []
     for name in names:
         if name not in PRESETS:
             sys.exit(f"unknown preset {name}; options: {', '.join(PRESETS)}")
         w, h, mb = PRESETS[name]
         out = os.path.join(a.out, f"{base}_{name}.jpg")
         q, size = save(cover_crop(img, w, h, fx, fy), out, mb)
-        print(f"{out}  {w}x{h}  q={q}  {size/1024:.0f} KB")
+        # How much of the frame a cover-crop throws away. Past about a fifth it is
+        # no longer a resize: a 16:9 layout cropped to 9:16 loses 44% of its width,
+        # which is where the headline lives. The file still saves and still looks
+        # deliberate, so without this the clipped type ships unnoticed.
+        src_r, dst_r = img.width / img.height, w / h
+        loss = 1 - min(src_r, dst_r) / max(src_r, dst_r)
+        flag = ""
+        if loss > 0.20:
+            flag = f"   <-- {loss*100:.0f}% of the frame cropped away"
+            warned.append((name, loss))
+        print(f"{out}  {w}x{h}  q={q}  {size/1024:.0f} KB{flag}")
+
+    if warned:
+        print()
+        print("REBUILD, do not ship these crops:")
+        for name, loss in warned:
+            print(f"  {name}: {loss*100:.0f}% of the frame removed - type and focal point")
+            print(f"    are almost certainly clipped. Re-render the layout at that ratio")
+            print(f"    instead (vertical-cover.html for 9:16), then re-run safe_zone_overlay.py.")
+        print("  Look at every one of them before delivering.")
+
 
 if __name__ == "__main__":
     main()

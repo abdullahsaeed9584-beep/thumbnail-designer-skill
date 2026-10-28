@@ -5,8 +5,15 @@
   python fetch_stock.py "city skyline night" --count 3 --min-width 1600 --landscape
   python fetch_stock.py "office desk" --any-license        # wider pool, needs attribution
 
-Source: Openverse (openverse.org), which aggregates openly licensed media from Flickr,
-Wikimedia, Nappy, Rawpixel and others. No API key needed.
+Sources, tried in order until one answers. No API key needed for either:
+  1. Openverse (openverse.org) - aggregates Flickr, Wikimedia, Nappy, Rawpixel. Best
+     licence metadata and the best search.
+  2. Wikimedia Commons, reached through the en.wikipedia.org API - public domain and
+     Creative Commons photographs, with full attribution metadata.
+
+One source being down is the normal case, not the exceptional one: Openverse was
+unreachable from the machine this was last tested on while Wikimedia answered fine.
+A single-source fetcher simply fails there, which is why there are two.
 
 LICENSING - this matters, read it:
   * Default is CC0 + Public Domain Mark ONLY. Those need no attribution and are safe for
@@ -25,6 +32,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+import re
 
 API = "https://api.openverse.org/v1/images/"
 UA = {"User-Agent": "thumbnail-designer-skill/1.0 (+https://github.com/)"}
@@ -63,13 +71,99 @@ def search(query, count, license_filter, min_width, orientation, timeout):
     return out, data.get("result_count", 0)
 
 
+WIKI_API = "https://en.wikipedia.org/w/api.php"
+# Wikimedia's user-agent policy rejects generic agents with HTTP 429. It wants a
+# named client and a contact URL, so this request does not reuse the UA above.
+WIKI_UA = {"User-Agent": "thumbnail-designer-skill/1.8 "
+                         "(https://github.com/abdullahsaeed9584-beep/thumbnail-designer-skill) "
+                         "python-urllib"}
+
+
+def strip_html(v):
+    return re.sub(r"<[^>]+>", "", v or "").strip()
+
+
+def search_wikimedia(query, count, min_width, timeout):
+    """Commons search via the en.wikipedia API, normalised to Openverse's shape.
+
+    ns 6 is the File namespace. iiurlwidth gives a scaled thumbnail URL, which is what
+    we want: the originals are routinely 40 MP scans nobody needs for a design.
+    """
+    params = {
+        "action": "query", "format": "json", "generator": "search",
+        "gsrsearch": query, "gsrlimit": max(count * 5, 20), "gsrnamespace": 6,
+        "prop": "imageinfo", "iiprop": "url|extmetadata|size|mime",
+        "iiurlwidth": 2000,
+    }
+    url = WIKI_API + "?" + urllib.parse.urlencode(params)
+    req = urllib.request.Request(url, headers=WIKI_UA)
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        data = json.loads(r.read().decode())
+
+    pages = (data.get("query") or {}).get("pages") or {}
+    out = []
+    for pg in pages.values():
+        ii = (pg.get("imageinfo") or [{}])[0]
+        if not ii:
+            continue
+        if (ii.get("mime") or "") not in ("image/jpeg", "image/png", "image/webp"):
+            continue
+        w = ii.get("width") or 0
+        if w and w < min_width:
+            continue
+        em = ii.get("extmetadata") or {}
+        lic = strip_html((em.get("LicenseShortName") or {}).get("value")) or "unknown"
+        out.append({
+            "url": ii.get("thumburl") or ii.get("url"),
+            "width": ii.get("width"), "height": ii.get("height"),
+            "title": strip_html((em.get("ObjectName") or {}).get("value"))
+                     or pg.get("title", "").replace("File:", ""),
+            "creator": strip_html((em.get("Artist") or {}).get("value")) or "unknown",
+            "license": lic,
+            "license_version": "",
+            "foreign_landing_url": "https://commons.wikimedia.org/wiki/"
+                                   + urllib.parse.quote(pg.get("title", "")),
+            "_source": "Wikimedia Commons",
+        })
+        if len(out) >= count:
+            break
+    return out, len(pages)
+
+
+def search_all(query, count, license_filter, min_width, orientation, timeout):
+    """Try each backend; only give up when every one has failed."""
+    problems = []
+    try:
+        res, total = search(query, count, license_filter, min_width, orientation, timeout)
+        if res:
+            for r in res:
+                r.setdefault("_source", "Openverse")
+            return res, total, "Openverse", problems
+        problems.append("Openverse returned no usable result")
+    except SystemExit as e:
+        problems.append(str(e).splitlines()[0])
+    except Exception as e:
+        problems.append(f"Openverse: {e}")
+
+    try:
+        res, total = search_wikimedia(query, count, min_width, timeout)
+        if res:
+            return res, total, "Wikimedia Commons", problems
+        problems.append("Wikimedia returned no usable result")
+    except Exception as e:
+        problems.append(f"Wikimedia: {e}")
+
+    return [], 0, None, problems
+
+
 def download(rec, outdir, index, timeout):
     url = rec["url"]
     ext = os.path.splitext(urllib.parse.urlparse(url).path)[1].lower()
     if ext not in (".jpg", ".jpeg", ".png", ".webp"):
         ext = ".jpg"
     path = os.path.join(outdir, f"{index:02d}{ext}")
-    req = urllib.request.Request(url, headers=UA)
+    hdr = WIKI_UA if "wikimedia.org" in url or "wikipedia.org" in url else UA
+    req = urllib.request.Request(url, headers=hdr)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             data = r.read()
@@ -112,14 +206,20 @@ def main():
     orientation = "wide" if a.landscape else ("tall" if a.portrait else None)
     lic = None if a.any_license else SAFE
 
-    results, total = search(a.query, a.count, lic, a.min_width, orientation, a.timeout)
+    results, total, used, problems = search_all(
+        a.query, a.count, lic, a.min_width, orientation, a.timeout)
+    for note in problems:
+        print(f"  .. {note}")
     if not results:
-        sys.exit(f"No usable results for {a.query!r} "
-                 f"({total} matched before the width/licence filter).\n"
-                 f"Try a simpler query, lower --min-width, or --any-license.")
+        sys.exit(f"No usable results for {a.query!r} from any source.\n"
+                 f"Try a simpler query, lower --min-width, or --any-license.\n"
+                 f"Otherwise fall back to an asset the user supplies - and say so.")
 
     os.makedirs(a.out, exist_ok=True)
-    print(f"{len(results)} of {total} matches, -> {a.out}")
+    print(f"{len(results)} of {total} matches via {used} -> {a.out}")
+    if used != "Openverse":
+        print("  NOTE: this is the fallback source. Licences here are often CC-BY or "
+              "CC-BY-SA, which REQUIRE visible credit - check ATTRIBUTION.md per image.")
     rows, paths = [], []
     for i, rec in enumerate(results, 1):
         p = download(rec, a.out, i, a.timeout)
@@ -132,8 +232,7 @@ def main():
 
     att = os.path.join(a.out, "ATTRIBUTION.md")
     with open(att, "w", encoding="utf-8") as f:
-        f.write(f"# Image attribution\n\nQuery: `{a.query}`\nSource: Openverse "
-                f"(https://openverse.org)\n\n")
+        f.write(f"# Image attribution\n\nQuery: `{a.query}`\nSearched via: {used}\n\n")
         if a.any_license:
             f.write("**These are NOT all CC0.** Any CC-BY / CC-BY-SA item below must be "
                     "credited visibly wherever the thumbnail is published.\n\n")
@@ -143,6 +242,7 @@ def main():
                     f"- Creator: {rec.get('creator') or 'unknown'}\n"
                     f"- Licence: {(rec.get('license') or '?').upper()} "
                     f"{rec.get('license_version') or ''}\n"
+                    f"- Via: {rec.get('_source') or used}\n"
                     f"- Source: {rec.get('foreign_landing_url') or rec.get('url')}\n\n")
     print(f"\nwrote {att} - keep it, and look at every image before using it.")
     print("Openly licensed is not model- or property-released and does not clear brands.")

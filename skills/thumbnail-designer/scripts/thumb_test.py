@@ -26,7 +26,11 @@ SPEC = {
     "16:9": (1280, 720, 2_000_000),
     "9:16": (1080, 1920, None),
     "4:5": (1080, 1350, None),
-    "1:1": (3000, 3000, None),
+    # 1000 is the marketplace floor (Amazon/eBay/Daraz listing images), NOT the
+    # podcast floor. A 1:1 canvas is a listing at least as often as it is a podcast
+    # cover, and failing a perfectly valid 1200x1200 listing trains people to ignore
+    # the checker. The podcast minimum is handled as a note below instead.
+    "1:1": (1000, 1000, None),
     # Fiverr gig images are 1280x769, not 16:9 - without this entry a correct
     # gig image is reported as "not a clean platform ratio".
     "1280:769": (1280, 769, None),
@@ -162,11 +166,17 @@ def main():
         fails.append(f"below spec size: {img.width}x{img.height} < {spec_w}x{spec_h}")
     if limit and size > limit:
         fails.append(f"file {size/1024/1024:.2f} MB exceeds the {limit/1024/1024:.2f} MB limit")
+    notes = []
+    if ratio == "1:1" and img.width < 1400:
+        notes.append(f"{img.width}x{img.height} is fine for a marketplace listing but below "
+                     f"the 1400 minimum for a podcast cover (3000 recommended)")
     if spread < 110:
         fails.append(f"luminance spread only {spread}/255 - too flat, will mush at {MOBILE_W}px")
 
     print(f"wrote 4 tests + {p('sheet')}")
     print(f"ratio {ratio} | {img.width}x{img.height} | {size/1024:.0f} KB | luminance spread {spread}/255")
+    for n in notes:
+        print(f"note: {n}")
     if fails:
         print("\nFAIL:")
         for f in fails:

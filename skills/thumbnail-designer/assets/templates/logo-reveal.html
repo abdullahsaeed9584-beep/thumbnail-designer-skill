@@ -1,0 +1,127 @@
+<!doctype html>
+<!-- LOGO-REVEAL - an animated logo sting, rendered by animate.py.
+
+     python animate.py logo-reveal.html out.mp4 --size 1920x1080 --duration 2.6 --fps 30 \
+       --var MARK="work/mark.svg" --var WORDMARK="work/wordmark.svg" \
+       --var BASE="#0B1220" --var ACCENT="#2FB4FF" --var TAG="Wealth, due north"
+
+     Every animation uses `both` fill so it holds its end state - animate.py seeks
+     by setting currentTime, and an animation without a fill mode snaps back to
+     its un-animated values once its time has passed, which wrecks the tail.
+
+     Timing (seconds), deliberately short: a logo sting that outstays 3s is an
+     obstacle between the viewer and the content.
+       0.00  mark wipes up behind its own mask
+       0.35  mark settles, light sweep crosses it
+       0.60  wordmark letters rise
+       1.10  rule draws, tagline fades
+       2.00  hold
+     MARK/WORDMARK are SVG or PNG. Supply the wordmark already outlined - see
+     scripts/text_to_paths.py.
+
+     KNOCKOUT=1 renders the logo in solid white. Use it on any dark BASE: a navy
+     logo on a navy ground is invisible, and the first build of this template
+     shipped exactly that. Check the filmstrip, not the still. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Logo reveal</title>
+<style>
+  :root { --base: {{BASE}}; --accent: {{ACCENT}}; --ink: {{INK}}; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--base); }
+
+  .stage { position: relative; width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(60% 60% at 50% 46%,
+        color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 70%),
+      var(--base);
+    -webkit-font-smoothing: antialiased; }
+
+  .lock { display: flex; align-items: center; gap: 3.2vh; }
+
+  /* the mark rises out of a mask rather than fading - a fade reads as a slide
+     transition, a wipe reads as a build */
+  .mark-wrap { overflow: hidden; height: 18vh; display: flex; align-items: flex-end; }
+  .mark { height: 18vh; display: block;
+    transform: translateY(104%);
+    animation: rise 0.62s cubic-bezier(.19,1,.22,1) both; }
+  .mark-only .mark { height: 26vh; }
+
+  .word { height: 9vh; display: block; opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    animation: wipe 0.70s cubic-bezier(.22,1,.26,1) 0.60s both; }
+
+  /* A brand-colour logo on a brand-colour ground disappears. The one-colour
+     versions exist precisely for this: on a dark sting the logo is the knockout.
+     KNOCKOUT=1 uses the same filter svg_check.py proves the mark survives. */
+  .knockout .mark, .knockout .word { filter: brightness(0) invert(1); }
+
+  /* Narrow and weak. A wide bright sweep stops being a highlight on the logo and
+     becomes a white bar crossing the frame - it was the loudest thing in the clip. */
+  .sweep { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+    background: linear-gradient(104deg, transparent 47%,
+      color-mix(in srgb, #FFFFFF 38%, transparent) 50%, transparent 53%);
+    transform: translateX(-60%); opacity: 0;
+    animation: sweep 0.75s ease-out 0.34s both; }
+
+  .under { position: absolute; left: 50%; bottom: 33vh; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 1.9vh; }
+  .rule { height: 0.42vh; width: 0; background: var(--accent); border-radius: 1vh;
+    animation: draw 0.55s cubic-bezier(.22,1,.26,1) 1.08s both; }
+  .tag { font-family: 'Inter', 'Montserrat', system-ui, sans-serif; font-weight: 600;
+    font-size: 2.3vh; letter-spacing: 0.26em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 72%, transparent);
+    opacity: 0; transform: translateY(0.9vh);
+    animation: fadeUp 0.6s ease-out 1.20s both; }
+
+  @keyframes rise   { from { transform: translateY(104%); } to { transform: translateY(0); } }
+  @keyframes wipe   { from { clip-path: inset(0 100% 0 0); opacity: 1; }
+                      to   { clip-path: inset(0 0 0 0);    opacity: 1; } }
+  @keyframes sweep  { 0% { transform: translateX(-60%); opacity: 0; }
+                      22% { opacity: 0.55; }
+                      100% { transform: translateX(60%); opacity: 0; } }
+  @keyframes draw   { from { width: 0; } to { width: 12vh; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(0.9vh); }
+                      to   { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="lock" id="lock">
+    <div class="mark-wrap" id="markwrap">
+      <img class="mark" id="mark" src="{{MARK}}" alt="" onerror="this.closest('.mark-wrap').remove()">
+    </div>
+    <img class="word" id="word" src="{{WORDMARK}}" alt="" onerror="this.remove()">
+  </div>
+  <div class="sweep" id="sweep"></div>
+  <div class="under">
+    <div class="rule" id="rule"></div>
+    <div class="tag" id="tag"></div>
+  </div>
+</div>
+<script>
+  if (/^(1|on|true|yes)$/i.test(("{{KNOCKOUT}}" || "").trim()))
+    document.getElementById('stage').classList.add('knockout');
+
+  var tag = "{{TAG}}".trim();
+  if (tag) { document.getElementById('tag').textContent = tag; }
+  else { document.getElementById('tag').remove(); document.getElementById('rule').remove(); }
+  if (!"{{WORDMARK}}".trim()) {
+    var w = document.getElementById('word'); if (w) w.remove();
+    document.getElementById('stage').classList.add('mark-only');
+  }
+
+  // Chrome-CLI fallback path: animate.py cannot drive the Web Animations API
+  // there, so it passes the frame time as #t=SECONDS and we seek by hand.
+  var m = /[#&]t=([\d.]+)/.exec(location.hash || "");
+  if (m) {
+    var t = parseFloat(m[1]) * 1000;
+    document.getAnimations().forEach(function (a) {
+      try { a.pause(); a.currentTime = t; } catch (e) {}
+    });
+  }
+</script>
+</body>
+</html>

@@ -27,10 +27,15 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 1280px; height: 720px; overflow: hidden; background: var(--base); }
+/* The canvas comes from render_html.py --size, so the stage follows the viewport.
+   Hard-pinning 1280x720 here meant every template that advertised "any size"
+   actually rendered a 1280x720 design into the corner of the requested canvas and
+   left the rest black - which looks like a design decision, not a bug. At 1280x720
+   these resolve to exactly the old values. */
+html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--base); }
 
 .stage {
-  position: relative; width: 1280px; height: 720px; overflow: hidden;
+  position: relative; width: 100vw; height: 100vh; overflow: hidden;
   background: var(--base); -webkit-font-smoothing: antialiased;
 }
 

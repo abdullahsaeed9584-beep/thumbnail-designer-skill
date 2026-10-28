@@ -1,0 +1,176 @@
+<!doctype html>
+<!-- INFOGRAPHIC - one shareable graphic carrying several real numbers.
+
+     python render_html.py infographic.html out.png --size 1080x1350 \
+       --var TITLE="Where the money goes" --var KICKER="Household spending" \
+       --var STATS="38%|Housing;19%|Transport;14%|Food;11%|Energy" \
+       --var BARS="2021,42;2022,51;2023,66;2024,71" --var BAR_UNIT="k" \
+       --var SOURCE="ONS Family Spending, 2024" --var ACCENT="#2563EB"
+
+     STATS   value|label, separated by ;   (2-6 of them)
+     BARS    label,number separated by ;   bars are scaled to the largest value
+     SOURCE  REQUIRED. The template renders a visible warning without it, because
+             an unsourced number presented as fact is the one thing this skill
+             will not ship. Numbers come from the user, never from invention.
+
+     Sizes: 1080x1350 (IG feed), 1080x1920 (story), 1200x630 (OG), 2480x3508 (A4
+     at 300dpi - for print use make_pdf.py instead so the page is physical). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Infographic</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --accent: {{ACCENT}}; --base: {{BASE}}; --ink: {{INK}}; }
+  html, body { width: auto; height: auto; }
+  .stage { width: 100vw; height: 100vh; display: flex; flex-direction: column;
+    padding: 6.2% 6.6% 5.4%; background:
+      radial-gradient(120% 70% at 84% 6%, color-mix(in srgb, var(--accent) 20%, transparent) 0%, transparent 58%),
+      linear-gradient(170deg, var(--base) 0%, color-mix(in srgb, var(--base) 82%, #000) 100%); }
+
+  .kicker { font-family: var(--support-font); font-weight: 800; font-size: 1.7vh;
+    letter-spacing: .24em; text-transform: uppercase; color: var(--accent); }
+  .title { font-family: var(--support-font); font-weight: 800; font-size: 5.2vh;
+    line-height: 1.04; letter-spacing: -.028em; color: var(--ink); margin: 2.2vh 0 1.4vh; }
+  .rule { width: 9vh; height: .72vh; background: var(--accent); border-radius: .4vh; }
+
+  /* Sized in em off .stats so one JS knob can shrink the whole block. With
+     absolute vh sizes the grid cannot shrink, so six stats simply overrun the
+     chart below them and the two overlap. */
+  .stats { display: grid; font-size: 1vh; gap: 2.2em; margin: 4vh 0 0; min-height: 0; }
+  .stat { display: flex; align-items: baseline; gap: 2.4em;
+    padding-bottom: 2em; border-bottom: .14em solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .stat .v { font-family: var(--support-font); font-weight: 800; font-size: 6.4em;
+    letter-spacing: -.04em; color: var(--accent); min-width: 3.4em; }
+  .stat .l { font-family: var(--support-font); font-weight: 600; font-size: 2.5em;
+    line-height: 1.22; color: color-mix(in srgb, var(--ink) 88%, transparent); }
+
+  /* flex: 0 0 - without it the chart is a shrinkable flex item, the stats above
+     take the space, and the bars collapse to nothing while their numbers and
+     labels still render. That looks like a styling choice and is not one. */
+  .chart { margin-top: auto; display: flex; align-items: flex-end; gap: 1.6vh;
+    flex: 0 0 26vh; padding-top: 3vh; }
+  .bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end;
+    align-items: center; gap: 1vh; height: 100%; }
+  .bar .f { width: 100%; border-radius: .6vh .6vh 0 0;
+    background: linear-gradient(180deg, var(--accent) 0%,
+      color-mix(in srgb, var(--accent) 62%, #000) 100%); }
+  .bar .n { font-family: var(--support-font); font-weight: 800; font-size: 2vh; color: var(--ink); }
+  .bar .c { font-family: var(--support-font); font-weight: 600; font-size: 1.7vh;
+    color: color-mix(in srgb, var(--ink) 62%, transparent); }
+
+  /* auto, not a fixed margin: when there is no chart the footer must still sit
+     on the baseline of the page rather than halfway up it. */
+  .foot { margin-top: auto; padding-top: 3.4vh; display: flex; justify-content: space-between;
+    align-items: flex-end; gap: 2vh; }
+  .src { font-family: var(--support-font); font-weight: 600; font-size: 1.6vh;
+    color: color-mix(in srgb, var(--ink) 58%, transparent); max-width: 74%; }
+  .nosrc { font-family: var(--support-font); font-weight: 800; font-size: 1.7vh;
+    color: #FFFFFF; background: #D7263D; padding: .9vh 1.4vh; border-radius: .6vh; }
+  .brand { font-family: var(--support-font); font-weight: 800; font-size: 1.7vh;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 70%, transparent); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="kicker" id="kicker"></div>
+  <div class="title" id="title"></div>
+  <div class="rule"></div>
+  <div class="stats" id="stats"></div>
+  <div class="chart" id="chart"></div>
+  <div class="foot">
+    <div id="srcwrap"></div>
+    <div class="brand" id="brand"></div>
+  </div>
+  <div class="grain"></div>
+</div>
+<script>
+  function set(id, v) {
+    var el = document.getElementById(id);
+    if (!v || !v.trim()) { el.remove(); return; }
+    el.textContent = v.trim();
+  }
+  set('kicker', "{{KICKER}}");
+  set('title', "{{TITLE}}");
+  set('brand', "{{BRAND}}");
+
+  var stats = "{{STATS}}".split(';').map(function (s) { return s.trim(); }).filter(Boolean);
+  var sw = document.getElementById('stats');
+  stats.forEach(function (s) {
+    var p = s.split('|');
+    var d = document.createElement('div');
+    d.className = 'stat';
+    d.innerHTML = '<div class="v">' + (p[0] || '').trim() + '</div>' +
+                  '<div class="l">' + (p[1] || '').trim() + '</div>';
+    sw.appendChild(d);
+  });
+  if (!stats.length) sw.remove();
+
+  var bars = "{{BARS}}".split(';').map(function (s) { return s.trim(); }).filter(Boolean);
+  var ch = document.getElementById('chart');
+  if (bars.length) {
+    var unit = "{{BAR_UNIT}}".trim();
+    var vals = bars.map(function (b) { return parseFloat(b.split(',')[1]); });
+    // NOT `top`: a global `var top` is an assignment to window.top, which is
+    // read-only, so it silently keeps the Window object and every bar height
+    // computes to NaN%. The numbers still render, so the chart looks styled
+    // rather than broken. Same trap applies to name, length, status, parent.
+    var maxVal = Math.max.apply(null, vals) || 1;
+    bars.forEach(function (b, i) {
+      var p = b.split(',');
+      // Bars are scaled from zero against the largest value. A truncated axis is
+      // the standard way a chart lies; this template has no option to do it.
+      var pct = Math.max(2, vals[i] / maxVal * 100);
+      var d = document.createElement('div');
+      d.className = 'bar';
+      d.innerHTML = '<div class="n">' + vals[i] + unit + '</div>' +
+                    '<div class="f" style="height:' + pct.toFixed(1) + '%"></div>' +
+                    '<div class="c">' + (p[0] || '').trim() + '</div>';
+      ch.appendChild(d);
+    });
+  } else { ch.remove(); }
+
+  // Source is not optional. If a number is on the graphic and its origin is not,
+  // the graphic is making a claim it cannot support - so the gap is made visible
+  // rather than quietly shipped.
+  var src = "{{SOURCE}}".trim();
+  var w = document.getElementById('srcwrap');
+  if (src) {
+    w.className = 'src';
+    w.textContent = 'Source: ' + src;
+  } else if (stats.length || bars.length) {
+    w.className = 'nosrc';
+    w.textContent = 'NO SOURCE SUPPLIED — do not publish';
+  } else { w.remove(); }
+
+  // Fit the stats block. More rows means smaller rows - the alternative is the
+  // stats running under the chart, which renders as two overlapping layers.
+  if (stats.length) {
+    var unit2 = window.innerHeight / 100;      // 1vh in px
+    var fs = unit2;
+    sw.style.fontSize = fs + 'px';
+    // Measure the BLOCK, not the page. .stats is a shrinkable flex item with
+    // min-height:0, so when it runs out of room the box shrinks while its grid
+    // rows spill out of it - the page height never changes and a test against
+    // the stage reports everything is fine while the rows sit on the chart.
+    var over = function () { return sw.scrollHeight > sw.clientHeight + 1; };
+    var guard = 0;
+    while (over() && fs > unit2 * 0.40 && guard++ < 300) {
+      fs -= unit2 * 0.02;
+      sw.style.fontSize = fs + 'px';
+    }
+  }
+
+  // Fit the title: an infographic headline that wraps to four lines has eaten
+  // the space the data needs.
+  var t = document.getElementById('title');
+  if (t) {
+    var size = parseFloat(getComputedStyle(t).fontSize);
+    while (size > 18 && t.scrollHeight > window.innerHeight * 0.20) {
+      size -= 2; t.style.fontSize = size + 'px';
+    }
+  }
+</script>
+</body>
+</html>

@@ -3,19 +3,29 @@
 ![Thumbnail Designer](docs/banner.png)
 
 **A senior-art-director skill for Claude that designs, renders, critiques, A/B tests and
-batch-produces premium thumbnails — and proves the result before shipping it.**
+batch-produces premium graphic design — thumbnails, logos, print, packaging, signage,
+listings, infographics, decks and motion — and proves the result before shipping it.**
 
 [![Licence: proprietary](https://img.shields.io/badge/licence-proprietary-0B0E14?style=flat-square)](LICENSE)
 ![Skill](https://img.shields.io/badge/type-agent%20skill-2563EB?style=flat-square)
-![Templates](https://img.shields.io/badge/templates-12-16A34A?style=flat-square)
-![Scripts](https://img.shields.io/badge/scripts-9-0891B2?style=flat-square)
-![Platforms](https://img.shields.io/badge/platforms-13-F2A20C?style=flat-square)
+![Templates](https://img.shields.io/badge/templates-16-16A34A?style=flat-square)
+![Scripts](https://img.shields.io/badge/scripts-16-0891B2?style=flat-square)
+![Outputs](https://img.shields.io/badge/outputs-PNG%20·%20SVG%20·%20PDF%20·%20MP4-F2A20C?style=flat-square)
 
 </div>
 
 ---
 
 ## What it makes
+
+![Capabilities](docs/capabilities.png)
+
+<sub>Every panel above is a real file one of the scripts wrote during the test suite — a JPG, an
+SVG, two PDFs, a dieline, a deck and an MP4 — not a mock-up. The Urdu shutter is a 3×2 metre
+PDF whose page box was measured back out of the file; the logo is outlined vector checked at
+16px and in one colour; the chart bars are zero-based with the source printed on the graphic.</sub>
+
+### Thumbnails and covers
 
 ![Showcase](docs/showcase.png)
 
@@ -161,12 +171,19 @@ clickbait the video doesn't pay off, and no claiming an edit it didn't actually 
 ```
 skills/thumbnail-designer/
 ├── SKILL.md                  entry point: workflow, routing, hard rules
-├── references/
+├── references/            21 files, loaded on demand
+│   ├── deliverables.md       raster / vector / page / motion — and what CANNOT be made
 │   ├── style-registers.md    pick the aesthetic register before concepting
-│   ├── glow-and-light.md     motivated light, selective desaturation, annotation
+│   ├── glow-and-light.md     motivated light, selective desaturation, density
 │   ├── premium-standard.md   the quality bar — read on every build
 │   ├── render-pipeline.md    the 10-layer build order and the commands
 │   ├── composition-type.md   composition, typography, graphics, Urdu/RTL
+│   ├── reference-analysis.md reading what a supplied reference actually asks for
+│   ├── brand-identity.md     logo construction, outlining, the identity pack
+│   ├── print-production.md   bleed/trim/safe, packaging dielines, signage, shutters
+│   ├── commerce.md           marketplace specs, product graphics, honest callouts
+│   ├── data-and-decks.md     infographics, charts that don't lie, presentations
+│   ├── motion.md             stings, timing, easing, formats and real limits
 │   ├── retouch-color.md      grading, cut-outs, lighting, compositing
 │   ├── hooks.md              headline formulas and what's banned
 │   ├── scorecard.md          10 axes × 0-4, ship at ≥32/40
@@ -174,22 +191,30 @@ skills/thumbnail-designer/
 │   ├── cases.md              19 input/intent routes
 │   ├── niche-guide.md        visual vocabulary per niche
 │   ├── platform-specs.md     sizes, safe zones, file limits
-│   ├── qa-export.md          QA checklist and deliverables
+│   ├── qa-export.md          QA checklist per deliverable type
 │   └── tools-fallback.md     tier detection and honesty rules
-├── scripts/
+├── scripts/               16 tools, every one of them verifiable
 │   ├── render_html.py        HTML template → PNG (headless Chromium)
 │   ├── composite.py          subject + bg: shadow, rim light, colour match
 │   ├── finish.py             clarity, vignette, grain, sharpen, size cap
+│   ├── make_pdf.py           → print-ready PDF; measures its own /MediaBox
+│   ├── make_deck.py          → multi-page PDF deck from a JSON spec
+│   ├── dieline.py            → dimensioned carton dieline as SVG
+│   ├── svg_check.py          logo QA: structure, 16px, one-colour contact sheet
+│   ├── text_to_paths.py      wordmark → real glyph outlines (no live text)
+│   ├── animate.py            → MP4 / WebM / GIF via frame-accurate seeking
 │   ├── thumb_test.py         the four proof tests + contact sheet
 │   ├── contrast_check.py     WCAG contrast vs the real pixels behind the text
 │   ├── safe_zone_overlay.py  margin / duration-badge overlay
-│   ├── resize.py             focal-aware multi-platform re-crop
+│   ├── resize.py             focal-aware re-crop; warns when a crop will clip type
+│   ├── lint_templates.py     static checks on every template
+│   ├── fetch_stock.py        real CC-licensed photography, two sources
 │   └── fetch_fonts.py        licence-safe Google Fonts
 ├── assets/
-│   ├── templates/           12 layouts + base/impact/premium stylesheets
+│   ├── templates/           16 layouts + base/impact/premium/print stylesheets
 │   ├── brand-kits/           per-client style systems
 │   └── fonts/                OFL fonts land here
-└── evals/test-prompts.md     25 regression prompts
+└── evals/test-prompts.md     35 regression prompts
 ```
 
 ---
@@ -232,14 +257,28 @@ python scripts/thumb_test.py out/final.jpg --competitors comp1.jpg comp2.jpg
 | `photo-split.html` | real photograph full-bleed one side, type the other — no cut-out | any |
 | `showcase.html` | any offer/product/service: hook left, device right — `DEVICE=browser/player/screen/none` | any |
 | `text-layer.html` | headline only, transparent — for the compositing route | 1280×720 |
+| `infographic.html` | data graphic: statistics, zero-based bars, **mandatory source line** | any |
+| `print-page.html` | print page via `make_pdf.py`: flyer, poster, card, certificate | mm |
+| `signage.html` | shopfront, shutter, banner, vehicle — RTL/Nastaliq aware, cap height in mm | mm |
+| `logo-reveal.html` | animated logo sting via `animate.py` | any |
+
+Every template is checked by `scripts/lint_templates.py`, which catches the failure mode that
+bit two of them: a top-level `var top` or `var name` in an inline script silently writes to a
+read-only property of `window`, so a chart's bars all compute to `NaN%` or a sign's text
+vanishes entirely — while the output still looks like a deliberate design.
 
 ---
 
 ## Real imagery, not drawn shapes
 
 Code-drawn scenery is the fastest way to look AI-made. The skill's order of preference is:
-**your own photo or screenshot** → `scripts/fetch_stock.py` (real CC0 photography from
-Openverse, no API key) → abstract geometry, and only when abstraction is the point.
+**your own photo or screenshot** → `scripts/fetch_stock.py` → abstract geometry, and only
+when abstraction is the point.
+
+`fetch_stock.py` tries Openverse first, then Wikimedia Commons, because one source being
+unreachable is the normal case rather than the exceptional one. Every download writes an
+`ATTRIBUTION.md` with the licence and creator, and the script warns loudly when a query is
+about people — an open licence is **not** a model release.
 
 `photo-split.html` is the most reliable way to use a real photo: it bleeds the image across one
 side and dissolves it into the type side with a gradient scrim, so there is **no cut-out, no

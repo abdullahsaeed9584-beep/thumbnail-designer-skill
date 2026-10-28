@@ -1,0 +1,193 @@
+<!doctype html>
+<!-- SIGNAGE - shop fascia, shutter, banner, vehicle panel. Large format, read at
+     distance, and Urdu/Arabic-capable. Rendered by make_pdf.py at the real physical
+     size in millimetres.
+
+     python make_pdf.py signage.html shutter.pdf --trim 3000x2000 --bleed 0 --landscape \
+       --proof shutter_proof.png \
+       --var DIR=rtl --var NAME="..." --var TRADE="..." \
+       --var SERVICES="... | ... | ..." --var PHONE="0300 1234567" \
+       --var ADDRESS="..." --var BASE="#0B2545" --var ACCENT="#F2B705" \
+       --var CAP_MM=260 --var RIBS=1
+
+     DIR       ltr (default) | rtl - rtl also switches the type stack to Nastaliq
+     CAP_MM    cap height of the shop name in millimetres. THE key number: roughly
+               25 mm per 3 m of reading distance. 15 m away wants ~125 mm; a fascia
+               read across a road wants 250 mm+. Set it from the distance, then see
+               how many words fit - not the other way round.
+     RIBS=1    overlay the corrugation lines of a roller shutter, so you can see
+               what the ribs will chop. Proof only - never leave on for the printer.
+     PHONE/ADDRESS are copied character for character from the user. Check them on
+     the rendered proof, not in this command. A wrong digit is wrong for years. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Signage</title>
+<link rel="stylesheet" href="print.css">
+<style>
+  :root { --accent: {{ACCENT}}; --base: {{BASE}}; --ink: {{INK}}; }
+  .page { background: var(--base); }
+
+  .live { justify-content: center; align-items: center; text-align: center; gap: 0; }
+  .rtl .live { direction: rtl; }
+
+  .name {
+    font-family: var(--display); font-weight: 900; color: var(--ink);
+    line-height: 1.0; letter-spacing: -0.015em;
+  }
+  /* Nastaliq is a sloping script: its glyphs hang well below and above the baseline,
+     so it needs roughly double the line box Latin does. Clip it and the descenders
+     of the first line are cut by the ascenders of the second. */
+  .rtl .name {
+    font-family: 'Noto Nastaliq Urdu', serif; font-weight: 400;
+    line-height: 1.85; letter-spacing: 0;
+  }
+
+  .trade {
+    font-family: var(--support-font); font-weight: 800; color: var(--accent);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .rtl .trade {
+    font-family: 'Noto Nastaliq Urdu', serif; font-weight: 400;
+    letter-spacing: 0; text-transform: none; line-height: 1.8;
+  }
+
+  .bar { width: 100%; background: var(--accent); }
+
+  .services {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    font-family: var(--support-font); font-weight: 700;
+    color: color-mix(in srgb, var(--ink) 92%, transparent);
+  }
+  .rtl .services { font-family: 'Noto Nastaliq Urdu', serif; font-weight: 400; }
+  .services span { white-space: nowrap; }
+  .services i { font-style: normal; color: var(--accent); opacity: .8; }
+
+  /* The phone number is the whole point of a shop sign. It is set in Latin
+     numerals and left-to-right even on an RTL sign, because that is how a phone
+     number is dialled and how every Urdu signwriter sets one. */
+  .contact {
+    direction: ltr; font-family: var(--support-font); font-weight: 900;
+    color: var(--base); background: var(--accent);
+    letter-spacing: 0.02em; border-radius: 2mm; display: inline-block;
+  }
+  .address {
+    font-family: var(--support-font); font-weight: 600;
+    color: color-mix(in srgb, var(--ink) 74%, transparent);
+  }
+  .rtl .address { font-family: 'Noto Nastaliq Urdu', serif; font-weight: 400; line-height: 1.9; }
+
+  /* roller-shutter corrugation, proof only */
+  .ribs { position: absolute; inset: 0; pointer-events: none; display: none;
+    background: repeating-linear-gradient(180deg,
+      rgba(0,0,0,0.22) 0, rgba(0,0,0,0.22) 2mm,
+      rgba(255,255,255,0.10) 2mm, rgba(255,255,255,0.10) 4mm,
+      rgba(0,0,0,0) 4mm, rgba(0,0,0,0) 76mm); }
+  .ribs.on { display: block; }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <div class="bleed-art" id="art"></div>
+  <div class="live" id="live">
+    <div class="name" id="name"></div>
+    <div class="trade" id="trade"></div>
+    <div class="bar" id="bar"></div>
+    <div class="services" id="services"></div>
+    <div><span class="contact" id="contact"></span></div>
+    <div class="address" id="address"></div>
+  </div>
+  <div class="ribs" id="ribs"></div>
+  <div class="guides-print" id="guides"><div class="trim"></div><div class="safe"></div></div>
+</div>
+<script>
+  var page = document.getElementById('page');
+  var rtl = ("{{DIR}}" || "ltr").trim().toLowerCase() === 'rtl';
+  if (rtl) { page.classList.add('rtl'); document.documentElement.lang = 'ur'; }
+
+  // Everything is sized off the shop name's cap height, so the whole sign scales
+  // from one real-world measurement instead of from arbitrary percentages.
+  var cap = parseFloat("{{CAP_MM}}") || 180;
+  var mm = function (v) { return v + 'mm'; };
+  // nameEl, NOT name: `var name` writes to window.name, which coerces whatever it
+  // is given to a STRING. The element becomes "[object HTMLDivElement]", .style is
+  // undefined, the script throws on the next line, and every piece of text on the
+  // sign silently fails to render while the background looks fine.
+  var nameEl = document.getElementById('name');
+  nameEl.style.fontSize = mm(cap);
+
+  var trade = document.getElementById('trade');
+  trade.style.fontSize = mm(cap * 0.30);
+  trade.style.marginTop = mm(cap * (rtl ? 0.02 : 0.16));
+
+  var bar = document.getElementById('bar');
+  bar.style.height = mm(Math.max(cap * 0.055, 6));
+  bar.style.margin = mm(cap * 0.26) + ' 0';
+  bar.style.borderRadius = mm(cap * 0.03);
+
+  var services = document.getElementById('services');
+  services.style.fontSize = mm(cap * 0.19);
+  services.style.gap = mm(cap * 0.22);
+
+  var contact = document.getElementById('contact');
+  contact.style.fontSize = mm(cap * 0.34);
+  contact.style.padding = mm(cap * 0.10) + ' ' + mm(cap * 0.22);
+  contact.style.marginTop = mm(cap * 0.30);
+
+  var address = document.getElementById('address');
+  address.style.fontSize = mm(cap * 0.17);
+  address.style.marginTop = mm(cap * 0.22);
+
+  function set(id, v) {
+    var el = document.getElementById(id);
+    if (!v || !v.trim()) { el.remove(); return false; }
+    el.textContent = v.trim();
+    return true;
+  }
+  set('name', "{{NAME}}");
+  set('trade', "{{TRADE}}");
+  set('contact', "{{PHONE}}");
+  set('address', "{{ADDRESS}}");
+
+  var sv = "{{SERVICES}}".split('|').map(function (x) { return x.trim(); }).filter(Boolean);
+  if (sv.length) {
+    services.innerHTML = sv.map(function (x) { return '<span>' + x + '</span>'; })
+                           .join('<i>&bull;</i>');
+  } else { services.remove(); }
+  if (!document.getElementById('name') && !document.getElementById('trade')) bar.remove();
+
+  if (/^(1|on|true|yes)$/i.test(("{{RIBS}}" || "").trim()))
+    document.getElementById('ribs').classList.add('on');
+  if (/^(1|on|true|yes)$/i.test(("{{GUIDES}}" || "").trim()))
+    document.getElementById('guides').classList.add('on');
+
+  var bg = "{{BG}}".trim();
+  if (bg) {
+    document.getElementById('art').style.background =
+      "linear-gradient(0deg, rgba(0,0,0,.55), rgba(0,0,0,.55)), url('" + bg + "') center/cover";
+  } else {
+    document.getElementById('art').style.background =
+      'linear-gradient(150deg, var(--base) 0%, ' +
+      'color-mix(in srgb, var(--base) 78%, #000) 100%)';
+  }
+
+  // Shrink to fit rather than overflow: type that runs past the panel edge is type
+  // that gets trimmed off the sign.
+  var live = document.getElementById('live');
+  var guard = 0;
+  while (live.scrollHeight > live.clientHeight && cap > 20 && guard++ < 160) {
+    cap *= 0.96;
+    nameEl.style.fontSize = mm(cap);
+    trade.style.fontSize = mm(cap * 0.30);
+    services.style.fontSize = mm(cap * 0.19);
+    contact.style.fontSize = mm(cap * 0.34);
+    address.style.fontSize = mm(cap * 0.17);
+  }
+  if (guard > 0) {
+    // Leave the achieved cap height in the DOM so the proof can report it: the
+    // signwriter needs the real number, not the one that was asked for.
+    document.title = 'Signage - cap height ' + cap.toFixed(0) + 'mm';
+  }
+</script>
+</body>
+</html>

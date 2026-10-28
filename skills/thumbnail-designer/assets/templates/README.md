@@ -1,7 +1,14 @@
 # Templates
 
-Production HTML/CSS layouts rendered to PNG by `scripts/render_html.py`. All share `base.css`,
-which holds the design tokens and the layer stack from `references/render-pipeline.md`.
+Production HTML/CSS layouts. Most render to PNG through `scripts/render_html.py` and share
+`base.css`, which holds the design tokens and the layer stack from
+`references/render-pipeline.md`.
+
+Three do not use `base.css`, because it pins the page to a 1280x720 stage:
+`print-page.html` loads **`print.css`** and is rendered by `scripts/make_pdf.py` at a
+physical size in millimetres; `logo-reveal.html` is self-contained and rendered frame by
+frame by `scripts/animate.py`; `infographic.html` uses `base.css` but releases the fixed
+body size so it can take any canvas.
 
 `creator-impact.html` additionally loads **`impact.css`**, which carries the loud creator
 register - heavy stroke plus hard 3D extrude, saturated grounds, sunburst/halftone/grid
@@ -21,6 +28,9 @@ textures and props. See `references/style-registers.md`; never mix the two regis
 | `photo-split.html` | **real photograph, full bleed one side, type the other** - no cut-out needed | any |
 | `showcase.html` | **any offer/product/service**: hook left, device right. `DEVICE=browser\|player\|screen\|none` - `screen` drops in YOUR OWN image | any |
 | `text-layer.html` | headline only, transparent - for the `composite.py --text-layer` route | 1280x720 |
+| `infographic.html` | **data graphic**: 2-6 statistics, an optional zero-based bar chart, mandatory source line | any |
+| `print-page.html` | **print page** via `make_pdf.py`: flyer, poster, card, certificate, menu. Trim/bleed/safe aware | mm |
+| `logo-reveal.html` | **animated logo sting** via `animate.py`. `KNOCKOUT=1` on any dark ground | any |
 
 ## Tokens (override with `--var`)
 `ACCENT` the single accent colour - `BG` background image path - `SUBJECT` cut-out PNG -
@@ -37,9 +47,30 @@ python scripts/finish.py work/raw.png out/final.jpg --preset cinematic --max-byt
 python scripts/thumb_test.py out/final.jpg
 ```
 
+## The non-raster templates
+
+```
+# print: page box is trim + bleed, measured back out of the PDF
+python scripts/make_pdf.py assets/templates/print-page.html out.pdf   --trim A5 --bleed 3 --marks --proof out_proof.png --var HEADLINE="Grand Opening"
+
+# data: SOURCE is not optional - without it the template renders a visible warning
+python scripts/render_html.py assets/templates/infographic.html out.png --size 1080x1350   --var TITLE="..." --var STATS="38%|Housing;19%|Transport" --var SOURCE="..."
+
+# motion: every animation uses fill:both, or the tail of the clip renders wrong
+python scripts/animate.py assets/templates/logo-reveal.html out.mp4   --size 1920x1080 --duration 2.6 --fps 30 --var MARK="work/mark.svg" --var KNOCKOUT=1
+```
+
 ## Checking a layout
 Add `show-guides` to the `.stage` class to draw the 4% margin and the duration-badge keep-out,
 render, look, then remove it before exporting.
+
+## A trap worth knowing
+
+Never name a template variable `top`, `name`, `length`, `status`, `parent` or `self` in the
+inline script. A global `var top` is an assignment to the read-only `window.top`, so it
+silently keeps the Window object - `infographic.html` shipped with exactly that and every
+bar height computed to `NaN%`. The numbers still rendered, so it looked like a styling
+choice rather than a broken chart.
 
 ## House rules
 Edit a copy, not the original, when a client needs a variant - and save the client's token
