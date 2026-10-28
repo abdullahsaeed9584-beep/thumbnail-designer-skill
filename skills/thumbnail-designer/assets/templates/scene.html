@@ -154,10 +154,10 @@
     for (var k = 0; k <= 22; k++) { y += (rnd() - 0.42) * 16; y = Math.max(8, Math.min(92, y));
       pts.push((k / 22 * 100).toFixed(1) + ',' + (100 - y).toFixed(1)); }
     viz.innerHTML =
-      '<svg width="420" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">' +
+      '<svg width="520" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">' +
       '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + "{{SRC}}" +
-      '" stroke-width="2.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>';
-    viz.style.filter = 'drop-shadow(0 0 18px ' + "{{SRC}}" + ')';
+      '" stroke-width="6" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+    viz.style.filter = 'drop-shadow(0 0 14px ' + "{{SRC}}" + ') drop-shadow(0 0 40px ' + "{{SRC}}" + ')';
   }
 
   // bloom + spill keyed to the object

@@ -236,3 +236,21 @@ Audit and packaging pass.
 - Every template referenced in the docs is present, and every present template is documented.
 - Every README image link resolves.
 - Distributable is 1.71 MB.
+
+## 1.7.2 - 2026-10-28
+
+### Changed
+- **Showcase rebuilt with `scene.html`.** The gallery still led with three `insight.html`
+  builds - the austere, empty version of the premium look. Replaced with music, markets and DJ
+  builds that have a real place behind the subject and a structured light source.
+- Dropped `docs/style-premium-insight.png`; the register D section now points at the showcase
+  rather than carrying a second, weaker gallery.
+
+### Fixed
+- `VIZ=line` stroked at 2.6px, which reads as a squiggle rather than a light source. Now 6px
+  with a double drop-shadow and a wider viewport.
+
+### Added
+- Two rules to `glow-and-light.md` section 7, both from errors made building the gallery: the
+  subject must belong to the scene (a sunlit portrait in a dark club gives itself away through
+  light direction and colour temperature), and the light source needs enough visual weight.

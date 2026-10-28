@@ -19,9 +19,9 @@ batch-produces premium thumbnails — and proves the result before shipping it.*
 
 ![Showcase](docs/showcase.png)
 
-<sub>Premium Insight register: a light source inside the frame whose colour lands on the
-subject, the background and the type; everything else desaturated so the accent is the only
-colour in the picture. Real photographs, no generated imagery.</sub>
+<sub>A real place behind every subject, a light source with real structure — 30 equaliser bars,
+16 candlesticks with wicks — and its colour landing on the person and the room. Real
+photographs throughout, no generated imagery.</sub>
 
 ---
 
@@ -104,10 +104,8 @@ waveform, orb) whose colour lands on the subject, the background *and* the headl
 else desaturated to black and white so the accent is the only colour; refined mixed-case type
 with no stroke; one hand-drawn annotation. Doctrine in `references/glow-and-light.md`.
 
-![Premium insight examples](docs/style-premium-insight.png)
-
-<sub>Three light sources — bar, waveform, orb — three palettes, both directions. The glow is
-motivated: you can point at what is emitting it, and it lights the person.</sub>
+Built with `scene.html` — see the showcase at the top of this page. The glow is motivated:
+you can point at what is emitting it, and it lights the person and the room.
 
 **B — Cinematic Editorial.** Dark base, one restrained accent, depth of field, rim light, gradient
 type with a soft dark glow, 2–3% grain. For documentary, long-form, business and premium brands.

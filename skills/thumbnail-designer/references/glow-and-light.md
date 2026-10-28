@@ -120,6 +120,13 @@ a *meaningful thing* (a candlestick chart, an equaliser, a screen), never a feat
 - **Blend the subject with a mask**, feathering its own edge into the scene. An overlaid dark
   band is not a blend; it is a dark band.
 - If a large area carries nothing, the design is not finished.
+- **The subject has to belong to the scene.** A sunlit outdoor portrait dropped into a dark
+  club reads as fake instantly, however good the glow is - the light direction and colour
+  temperature give it away. Match them, or pick a different photo. `DIM` and `MONO` can pull a
+  bright studio portrait down into a dark room, but they cannot move the sun.
+- **Give the source enough weight.** A 2-3px plotted line is a squiggle at thumbnail scale,
+  not a light source. Stroke it at 6px+ with a double drop-shadow, or use candlesticks or
+  bars where structure does the work.
 
 Template: `scene.html`.
 
