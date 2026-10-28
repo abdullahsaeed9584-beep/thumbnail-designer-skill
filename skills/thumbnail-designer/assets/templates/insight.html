@@ -10,8 +10,11 @@
        --var ARROW=1 --var MONO=0.9
 
      SOURCE  bar | wave | orb | none      the thing emitting the light
-     LIT     the one word the light touches (set LIT_STYLE=bar for a glowing slab)
+     LIT     the one word the light touches (set LIT_STYLE=bar for a glowing slab).
+             Keep it to ONE word when using bar - a wrapped slab becomes a giant block
+             that swallows the light source behind it.
      MONO    0-1, how far the photo goes to black and white (default 0.9)
+     DIM     photo brightness multiplier - drop to ~0.5 for a light-background shot
      SIDE    right (default) or left - which side the subject sits on -->
 <html lang="en">
 <head>
@@ -33,7 +36,7 @@
 
   /* type sits BEHIND the subject so the subject masks it */
   /* padding-bottom reserves the pill's band so the headline can never sit on it */
-  .col { position: absolute; top: 0; bottom: 0; left: 5%; width: 48%; z-index: 7;
+  .col { position: absolute; top: 0; bottom: 0; left: 5%; width: 42%; z-index: 7;
     display: flex; flex-direction: column; justify-content: center; gap: 22px;
     padding-bottom: 16%; }
   .side-left .col { left: auto; right: 5%; align-items: flex-end; text-align: right; }
@@ -91,6 +94,13 @@
       ' color-mix(in srgb, var(--base) 55%, transparent) ' + (d + 16) + '%,' +
       ' transparent ' + Math.min(d + 40, 96) + '%)';
   } else { photo.remove(); }
+  // A photo shot on a light background sits brighter than the base and its straight
+  // edge shows through the scrim. DIM pushes it down to meet the design.
+  var dim = parseFloat("{{DIM}}");
+  if (photo.parentNode && !isNaN(dim)) {
+    photo.style.filter = 'grayscale(var(--mono)) contrast(1.14) brightness(' + dim + ')';
+  }
+
   var mono = "{{MONO}}".trim();
   document.documentElement.style.setProperty('--mono', mono === '' ? 0.9 : parseFloat(mono));
 

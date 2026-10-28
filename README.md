@@ -17,10 +17,11 @@ batch-produces premium thumbnails — and proves the result before shipping it.*
 
 ## What it makes
 
-![Photo-split examples](docs/style-photo-split.png)
+![Showcase](docs/showcase.png)
 
-<sub>One template, three niches, three palettes, both directions — real photographs,
-graded and backlit by the skill. Nothing here is drawn or AI-generated.</sub>
+<sub>Premium Insight register: a light source inside the frame whose colour lands on the
+subject, the background and the type; everything else desaturated so the accent is the only
+colour in the picture. Real photographs, no generated imagery.</sub>
 
 ---
 

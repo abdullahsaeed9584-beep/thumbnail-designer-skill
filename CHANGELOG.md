@@ -179,3 +179,16 @@ separates them from competent work.
   whole canvas and stopped the source reading as a source. Both are now capped and local, and
   the spill leans toward the subject so motivated light actually lands on the person.
 - The insight headline could overrun the pill label; the column now reserves that band.
+
+## 1.6.1 - 2026-10-28
+
+### Added
+- `DIM` on `insight.html`. A portrait shot on a light background sits brighter than the design
+  base, so its straight edge shows through the scrim; `DIM` drops it to meet the design.
+- `docs/showcase.png` - the README now leads with Premium Insight work across health, finance
+  and psychology, replacing the earlier gallery.
+
+### Changed
+- The insight type column narrowed to 42%. A multi-word `LIT` with `LIT_STYLE=bar` wrapped into
+  a slab so large it covered the light source behind it; the template now says to keep a bar
+  accent to one word.
